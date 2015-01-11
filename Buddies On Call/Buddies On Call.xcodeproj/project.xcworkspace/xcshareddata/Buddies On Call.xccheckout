@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>B7D8AF8D-EA66-4E11-9AAC-16E6D4CCA29A</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Buddies On Call</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>BF2C63E123874100D82AD8898BE7821BA62716DC</key>
+		<string>https://github.com/AlexRamey/CavDaily-iOS.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Buddies On Call/Buddies On Call.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>BF2C63E123874100D82AD8898BE7821BA62716DC</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/AlexRamey/CavDaily-iOS.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>BF2C63E123874100D82AD8898BE7821BA62716DC</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>BF2C63E123874100D82AD8898BE7821BA62716DC</string>
+			<key>IDESourceControlWCCName</key>
+			<string>CavDaily-iOS</string>
+		</dict>
+	</array>
+</dict>
+</plist>

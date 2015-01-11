@@ -1,0 +1,547 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0ADE30926FF8AE6F6BF7BAA7 /* libPods-Buddies On Call.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FFD5090988D4D913FE9BCE /* libPods-Buddies On Call.a */; };
+		D0BC21DB1A62F52800C2D765 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BC21DA1A62F52800C2D765 /* main.m */; };
+		D0BC21DE1A62F52800C2D765 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BC21DD1A62F52800C2D765 /* AppDelegate.m */; };
+		D0BC21E41A62F52800C2D765 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D0BC21E21A62F52800C2D765 /* Main.storyboard */; };
+		D0BC21E61A62F52800C2D765 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0BC21E51A62F52800C2D765 /* Images.xcassets */; };
+		D0BC21E91A62F52800C2D765 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = D0BC21E71A62F52800C2D765 /* LaunchScreen.xib */; };
+		D0BC21F51A62F52900C2D765 /* Buddies_On_CallTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BC21F41A62F52900C2D765 /* Buddies_On_CallTests.m */; };
+		D0BC22021A62F60300C2D765 /* BOCHomeControllerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BC22011A62F60300C2D765 /* BOCHomeControllerViewController.m */; };
+		D0BC22061A62F68300C2D765 /* UIColor+Theme.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BC22051A62F68300C2D765 /* UIColor+Theme.m */; };
+		D0BC220D1A62F95D00C2D765 /* BOCHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BC220C1A62F95D00C2D765 /* BOCHTTPClient.m */; };
+		D0BC22101A62FA1400C2D765 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0BC220F1A62FA1400C2D765 /* CoreLocation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D0BC21EF1A62F52900C2D765 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D0BC21CD1A62F52800C2D765 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D0BC21D41A62F52800C2D765;
+			remoteInfo = "Buddies On Call";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		89FFD5090988D4D913FE9BCE /* libPods-Buddies On Call.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Buddies On Call.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE628B16D9C040132ACEE812 /* Pods-Buddies On Call.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Buddies On Call.release.xcconfig"; path = "Pods/Target Support Files/Pods-Buddies On Call/Pods-Buddies On Call.release.xcconfig"; sourceTree = "<group>"; };
+		D0BC21D51A62F52800C2D765 /* Buddies On Call.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Buddies On Call.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0BC21D91A62F52800C2D765 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D0BC21DA1A62F52800C2D765 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		D0BC21DC1A62F52800C2D765 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		D0BC21DD1A62F52800C2D765 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		D0BC21E31A62F52800C2D765 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		D0BC21E51A62F52800C2D765 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		D0BC21E81A62F52800C2D765 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		D0BC21EE1A62F52900C2D765 /* Buddies On CallTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Buddies On CallTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0BC21F31A62F52900C2D765 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D0BC21F41A62F52900C2D765 /* Buddies_On_CallTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Buddies_On_CallTests.m; sourceTree = "<group>"; };
+		D0BC22001A62F60300C2D765 /* BOCHomeControllerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BOCHomeControllerViewController.h; sourceTree = "<group>"; };
+		D0BC22011A62F60300C2D765 /* BOCHomeControllerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BOCHomeControllerViewController.m; sourceTree = "<group>"; };
+		D0BC22041A62F68300C2D765 /* UIColor+Theme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Theme.h"; sourceTree = "<group>"; };
+		D0BC22051A62F68300C2D765 /* UIColor+Theme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Theme.m"; sourceTree = "<group>"; };
+		D0BC220B1A62F95D00C2D765 /* BOCHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BOCHTTPClient.h; sourceTree = "<group>"; };
+		D0BC220C1A62F95D00C2D765 /* BOCHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BOCHTTPClient.m; sourceTree = "<group>"; };
+		D0BC220F1A62FA1400C2D765 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		E6558814CF5070289CAB28E3 /* Pods-Buddies On Call.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Buddies On Call.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Buddies On Call/Pods-Buddies On Call.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D0BC21D21A62F52800C2D765 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D0BC22101A62FA1400C2D765 /* CoreLocation.framework in Frameworks */,
+				0ADE30926FF8AE6F6BF7BAA7 /* libPods-Buddies On Call.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D0BC21EB1A62F52900C2D765 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B49FBE00C14CAFDB50CE6E48 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D0BC220F1A62FA1400C2D765 /* CoreLocation.framework */,
+				89FFD5090988D4D913FE9BCE /* libPods-Buddies On Call.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CBB161591569C06AFFF76FD6 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E6558814CF5070289CAB28E3 /* Pods-Buddies On Call.debug.xcconfig */,
+				BE628B16D9C040132ACEE812 /* Pods-Buddies On Call.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		D0BC21CC1A62F52800C2D765 = {
+			isa = PBXGroup;
+			children = (
+				D0BC21D71A62F52800C2D765 /* Buddies On Call */,
+				D0BC21F11A62F52900C2D765 /* Buddies On CallTests */,
+				D0BC21D61A62F52800C2D765 /* Products */,
+				CBB161591569C06AFFF76FD6 /* Pods */,
+				B49FBE00C14CAFDB50CE6E48 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		D0BC21D61A62F52800C2D765 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D0BC21D51A62F52800C2D765 /* Buddies On Call.app */,
+				D0BC21EE1A62F52900C2D765 /* Buddies On CallTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D0BC21D71A62F52800C2D765 /* Buddies On Call */ = {
+			isa = PBXGroup;
+			children = (
+				D0BC220E1A62F96000C2D765 /* HTTPClient */,
+				D0BC22071A62F68700C2D765 /* Theme */,
+				D0BC22031A62F60600C2D765 /* Home */,
+				D0BC21FE1A62F5BD00C2D765 /* Delegate */,
+				D0BC21FF1A62F5CE00C2D765 /* Storyboard */,
+				D0BC21E51A62F52800C2D765 /* Images.xcassets */,
+				D0BC21E71A62F52800C2D765 /* LaunchScreen.xib */,
+				D0BC21D81A62F52800C2D765 /* Supporting Files */,
+			);
+			path = "Buddies On Call";
+			sourceTree = "<group>";
+		};
+		D0BC21D81A62F52800C2D765 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D0BC21D91A62F52800C2D765 /* Info.plist */,
+				D0BC21DA1A62F52800C2D765 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D0BC21F11A62F52900C2D765 /* Buddies On CallTests */ = {
+			isa = PBXGroup;
+			children = (
+				D0BC21F41A62F52900C2D765 /* Buddies_On_CallTests.m */,
+				D0BC21F21A62F52900C2D765 /* Supporting Files */,
+			);
+			path = "Buddies On CallTests";
+			sourceTree = "<group>";
+		};
+		D0BC21F21A62F52900C2D765 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D0BC21F31A62F52900C2D765 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D0BC21FE1A62F5BD00C2D765 /* Delegate */ = {
+			isa = PBXGroup;
+			children = (
+				D0BC21DC1A62F52800C2D765 /* AppDelegate.h */,
+				D0BC21DD1A62F52800C2D765 /* AppDelegate.m */,
+			);
+			name = Delegate;
+			sourceTree = "<group>";
+		};
+		D0BC21FF1A62F5CE00C2D765 /* Storyboard */ = {
+			isa = PBXGroup;
+			children = (
+				D0BC21E21A62F52800C2D765 /* Main.storyboard */,
+			);
+			name = Storyboard;
+			sourceTree = "<group>";
+		};
+		D0BC22031A62F60600C2D765 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				D0BC22001A62F60300C2D765 /* BOCHomeControllerViewController.h */,
+				D0BC22011A62F60300C2D765 /* BOCHomeControllerViewController.m */,
+			);
+			name = Home;
+			sourceTree = "<group>";
+		};
+		D0BC22071A62F68700C2D765 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				D0BC22041A62F68300C2D765 /* UIColor+Theme.h */,
+				D0BC22051A62F68300C2D765 /* UIColor+Theme.m */,
+			);
+			name = Theme;
+			sourceTree = "<group>";
+		};
+		D0BC220E1A62F96000C2D765 /* HTTPClient */ = {
+			isa = PBXGroup;
+			children = (
+				D0BC220B1A62F95D00C2D765 /* BOCHTTPClient.h */,
+				D0BC220C1A62F95D00C2D765 /* BOCHTTPClient.m */,
+			);
+			name = HTTPClient;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D0BC21D41A62F52800C2D765 /* Buddies On Call */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D0BC21F81A62F52900C2D765 /* Build configuration list for PBXNativeTarget "Buddies On Call" */;
+			buildPhases = (
+				D628CBE9345197E1A0296473 /* Check Pods Manifest.lock */,
+				D0BC21D11A62F52800C2D765 /* Sources */,
+				D0BC21D21A62F52800C2D765 /* Frameworks */,
+				D0BC21D31A62F52800C2D765 /* Resources */,
+				1E26CC1328BAFFBA99A02471 /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Buddies On Call";
+			productName = "Buddies On Call";
+			productReference = D0BC21D51A62F52800C2D765 /* Buddies On Call.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D0BC21ED1A62F52900C2D765 /* Buddies On CallTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D0BC21FB1A62F52900C2D765 /* Build configuration list for PBXNativeTarget "Buddies On CallTests" */;
+			buildPhases = (
+				D0BC21EA1A62F52900C2D765 /* Sources */,
+				D0BC21EB1A62F52900C2D765 /* Frameworks */,
+				D0BC21EC1A62F52900C2D765 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D0BC21F01A62F52900C2D765 /* PBXTargetDependency */,
+			);
+			name = "Buddies On CallTests";
+			productName = "Buddies On CallTests";
+			productReference = D0BC21EE1A62F52900C2D765 /* Buddies On CallTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D0BC21CD1A62F52800C2D765 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = BOC;
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = HooApps;
+				TargetAttributes = {
+					D0BC21D41A62F52800C2D765 = {
+						CreatedOnToolsVersion = 6.1;
+					};
+					D0BC21ED1A62F52900C2D765 = {
+						CreatedOnToolsVersion = 6.1;
+						TestTargetID = D0BC21D41A62F52800C2D765;
+					};
+				};
+			};
+			buildConfigurationList = D0BC21D01A62F52800C2D765 /* Build configuration list for PBXProject "Buddies On Call" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = D0BC21CC1A62F52800C2D765;
+			productRefGroup = D0BC21D61A62F52800C2D765 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D0BC21D41A62F52800C2D765 /* Buddies On Call */,
+				D0BC21ED1A62F52900C2D765 /* Buddies On CallTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D0BC21D31A62F52800C2D765 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D0BC21E41A62F52800C2D765 /* Main.storyboard in Resources */,
+				D0BC21E91A62F52800C2D765 /* LaunchScreen.xib in Resources */,
+				D0BC21E61A62F52800C2D765 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D0BC21EC1A62F52900C2D765 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1E26CC1328BAFFBA99A02471 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Buddies On Call/Pods-Buddies On Call-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D628CBE9345197E1A0296473 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D0BC21D11A62F52800C2D765 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D0BC22021A62F60300C2D765 /* BOCHomeControllerViewController.m in Sources */,
+				D0BC220D1A62F95D00C2D765 /* BOCHTTPClient.m in Sources */,
+				D0BC22061A62F68300C2D765 /* UIColor+Theme.m in Sources */,
+				D0BC21DE1A62F52800C2D765 /* AppDelegate.m in Sources */,
+				D0BC21DB1A62F52800C2D765 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D0BC21EA1A62F52900C2D765 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D0BC21F51A62F52900C2D765 /* Buddies_On_CallTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D0BC21F01A62F52900C2D765 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D0BC21D41A62F52800C2D765 /* Buddies On Call */;
+			targetProxy = D0BC21EF1A62F52900C2D765 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		D0BC21E21A62F52800C2D765 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D0BC21E31A62F52800C2D765 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		D0BC21E71A62F52800C2D765 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D0BC21E81A62F52800C2D765 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		D0BC21F61A62F52900C2D765 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		D0BC21F71A62F52900C2D765 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D0BC21F91A62F52900C2D765 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E6558814CF5070289CAB28E3 /* Pods-Buddies On Call.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "Buddies On Call/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		D0BC21FA1A62F52900C2D765 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BE628B16D9C040132ACEE812 /* Pods-Buddies On Call.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "Buddies On Call/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		D0BC21FC1A62F52900C2D765 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Buddies On CallTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Buddies On Call.app/Buddies On Call";
+			};
+			name = Debug;
+		};
+		D0BC21FD1A62F52900C2D765 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Buddies On CallTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Buddies On Call.app/Buddies On Call";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D0BC21D01A62F52800C2D765 /* Build configuration list for PBXProject "Buddies On Call" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D0BC21F61A62F52900C2D765 /* Debug */,
+				D0BC21F71A62F52900C2D765 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D0BC21F81A62F52900C2D765 /* Build configuration list for PBXNativeTarget "Buddies On Call" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D0BC21F91A62F52900C2D765 /* Debug */,
+				D0BC21FA1A62F52900C2D765 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D0BC21FB1A62F52900C2D765 /* Build configuration list for PBXNativeTarget "Buddies On CallTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D0BC21FC1A62F52900C2D765 /* Debug */,
+				D0BC21FD1A62F52900C2D765 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D0BC21CD1A62F52800C2D765 /* Project object */;
+}
