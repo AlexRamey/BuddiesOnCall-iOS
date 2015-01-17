@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0ADE30926FF8AE6F6BF7BAA7 /* libPods-Buddies On Call.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FFD5090988D4D913FE9BCE /* libPods-Buddies On Call.a */; };
+		D086602E1A6AFB78008A7FDF /* BOCMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D086602D1A6AFB78008A7FDF /* BOCMapViewController.m */; };
+		D08660311A6AFB9F008A7FDF /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D08660301A6AFB9F008A7FDF /* MapKit.framework */; };
 		D0BC21DB1A62F52800C2D765 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BC21DA1A62F52800C2D765 /* main.m */; };
 		D0BC21DE1A62F52800C2D765 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BC21DD1A62F52800C2D765 /* AppDelegate.m */; };
 		D0BC21E41A62F52800C2D765 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D0BC21E21A62F52800C2D765 /* Main.storyboard */; };
@@ -33,6 +35,9 @@
 /* Begin PBXFileReference section */
 		89FFD5090988D4D913FE9BCE /* libPods-Buddies On Call.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Buddies On Call.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE628B16D9C040132ACEE812 /* Pods-Buddies On Call.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Buddies On Call.release.xcconfig"; path = "Pods/Target Support Files/Pods-Buddies On Call/Pods-Buddies On Call.release.xcconfig"; sourceTree = "<group>"; };
+		D086602C1A6AFB78008A7FDF /* BOCMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BOCMapViewController.h; sourceTree = "<group>"; };
+		D086602D1A6AFB78008A7FDF /* BOCMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BOCMapViewController.m; sourceTree = "<group>"; };
+		D08660301A6AFB9F008A7FDF /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		D0BC21D51A62F52800C2D765 /* Buddies On Call.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Buddies On Call.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0BC21D91A62F52800C2D765 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D0BC21DA1A62F52800C2D765 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -59,6 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D08660311A6AFB9F008A7FDF /* MapKit.framework in Frameworks */,
 				D0BC22101A62FA1400C2D765 /* CoreLocation.framework in Frameworks */,
 				0ADE30926FF8AE6F6BF7BAA7 /* libPods-Buddies On Call.a in Frameworks */,
 			);
@@ -77,6 +83,7 @@
 		B49FBE00C14CAFDB50CE6E48 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D08660301A6AFB9F008A7FDF /* MapKit.framework */,
 				D0BC220F1A62FA1400C2D765 /* CoreLocation.framework */,
 				89FFD5090988D4D913FE9BCE /* libPods-Buddies On Call.a */,
 			);
@@ -90,6 +97,15 @@
 				BE628B16D9C040132ACEE812 /* Pods-Buddies On Call.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		D086602F1A6AFB7D008A7FDF /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				D086602C1A6AFB78008A7FDF /* BOCMapViewController.h */,
+				D086602D1A6AFB78008A7FDF /* BOCMapViewController.m */,
+			);
+			name = Map;
 			sourceTree = "<group>";
 		};
 		D0BC21CC1A62F52800C2D765 = {
@@ -115,10 +131,11 @@
 		D0BC21D71A62F52800C2D765 /* Buddies On Call */ = {
 			isa = PBXGroup;
 			children = (
-				D0BC220E1A62F96000C2D765 /* HTTPClient */,
 				D0BC22071A62F68700C2D765 /* Theme */,
-				D0BC22031A62F60600C2D765 /* Home */,
 				D0BC21FE1A62F5BD00C2D765 /* Delegate */,
+				D0BC220E1A62F96000C2D765 /* HTTPClient */,
+				D0BC22031A62F60600C2D765 /* Home */,
+				D086602F1A6AFB7D008A7FDF /* Map */,
 				D0BC21FF1A62F5CE00C2D765 /* Storyboard */,
 				D0BC21E51A62F52800C2D765 /* Images.xcassets */,
 				D0BC21E71A62F52800C2D765 /* LaunchScreen.xib */,
@@ -333,6 +350,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D086602E1A6AFB78008A7FDF /* BOCMapViewController.m in Sources */,
 				D0BC22021A62F60300C2D765 /* BOCHomeControllerViewController.m in Sources */,
 				D0BC220D1A62F95D00C2D765 /* BOCHTTPClient.m in Sources */,
 				D0BC22061A62F68300C2D765 /* UIColor+Theme.m in Sources */,

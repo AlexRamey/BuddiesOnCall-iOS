@@ -7,6 +7,7 @@
 //
 
 #import "BOCHomeControllerViewController.h"
+#import "AppDelegate.h"
 #import "UIColor+Theme.h"
 
 @interface BOCHomeControllerViewController ()
@@ -26,10 +27,16 @@
         _locationManager = [[CLLocationManager alloc] init];
         [_locationManager setDelegate:self];
         [_locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
+        [_locationManager setPausesLocationUpdatesAutomatically:YES];
+        [_locationManager setActivityType:CLActivityTypeFitness];
         [_locationManager requestAlwaysAuthorization];
         
         isSessionInProgress = NO;
         sessionRequestInProgress = NO;
+        isLoggedIn = NO;
+        loginInProgress = NO;
+        
+        incomingLocationCounter = 0;
     }
     
     return self;
@@ -41,6 +48,60 @@
     _buddyUp.backgroundColor = [UIColor UVABlue];
     [_buddyUp setTitleColor:[UIColor UVAWhite] forState:UIControlStateNormal];
     [_buddyUp setTitle:@"Buddy Up!" forState:UIControlStateNormal];
+}
+
+-(void)loginWithCompletion:(void (^)(void))attemptStartSession
+{
+    loginInProgress = YES;
+    
+    void (^createUser)() = ^(){
+        NSLog(@"Create User");
+        [_httpClient createUserObjectWithName:@"iOS Test" email:@"" completion:^(NSError *error, NSNumber *userID)
+         {
+             if (error)
+             {
+                 dispatch_async(dispatch_get_main_queue(), ^{
+                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to fetch user object" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                     [alert show];
+                 });
+             }
+             else
+             {
+                 [[NSUserDefaults standardUserDefaults] setObject:userID forKey:BOC_USER_ID_KEY];
+                 isLoggedIn = YES;
+                 attemptStartSession();
+             }
+             
+             loginInProgress = NO;
+         }];
+    };
+    
+    NSNumber *userID = [[NSUserDefaults standardUserDefaults] objectForKey:BOC_USER_ID_KEY];
+    
+    if ([userID intValue] == -1) //create new user object
+    {
+        createUser();
+    }
+    else //verify that existing one is still good
+    {
+        [_httpClient verifyUserObjectID:userID completion:^(NSError *error)
+         {
+             if (error)
+             {
+                 //Failed to verify user, therefore create a new one . . .
+                 NSLog(@"Failed to verify user");
+                 createUser();
+             }
+             else
+             {
+                 //current stored userID is good
+                 NSLog(@"User was verified");
+                 loginInProgress = NO;
+                 isLoggedIn = YES;
+                 attemptStartSession();
+             }
+         }];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -55,10 +116,21 @@
 
 -(IBAction)buddyUp:(id)sender
 {
-    if (isSessionInProgress == NO && sessionRequestInProgress == NO)
+    void (^attemptStartSession)() = ^(){
+        if (isLoggedIn && isSessionInProgress == NO && sessionRequestInProgress == NO)
+        {
+            sessionRequestInProgress = YES;
+            [_locationManager startUpdatingLocation];
+        }
+    };
+    
+    if (!isLoggedIn && !loginInProgress)
     {
-        sessionRequestInProgress = YES;
-        [_locationManager startUpdatingLocation];
+        [self loginWithCompletion:attemptStartSession];
+    }
+    else
+    {
+        attemptStartSession();
     }
 }
 
@@ -66,23 +138,35 @@
 
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
-    //[_activityIndicator stopAnimating];
-    NSLog(@"DID UPDATE LOC");
     recentLocation = [locations objectAtIndex:([locations count]-1)];
     
-    [_httpClient postLocation:recentLocation forUser:@"abr8xq" completion:^(NSError *error, NSString *locationID)
+    if (incomingLocationCounter++ % 5 != 0)
+    {
+        return;
+    }
+    
+    NSString *userID = [[NSUserDefaults standardUserDefaults] objectForKey:BOC_USER_ID_KEY];
+    
+    [_httpClient postLocation:recentLocation forUser:userID completion:^(NSError *error, NSNumber *locationID)
     {
         if (!error)
         {
             NSLog(@"Did Post Location");
             if (isSessionInProgress == NO && sessionRequestInProgress == YES)
             {
-                [_httpClient openSessionForUser:@"abr8xq" location:locationID completion:^(NSError *error)
+                sessionRequestInProgress = NO;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    _buddyUp.enabled = NO;
+                    [_buddyUp setNeedsDisplay];
+                });
+                
+                [_httpClient openSessionForUser:userID location:[locationID stringValue] completion:^(NSError *error, NSNumber *sessionID)
                  {
                      if (!error)
                      {
                          isSessionInProgress = YES;
-                         NSLog(@"Session In Progress!");
+                         [[NSUserDefaults standardUserDefaults] setObject:sessionID forKey:BOC_SESSION_ID_KEY];
+                         NSLog(@"Session Opened!");
                      }
                      else
                      {
@@ -90,7 +174,10 @@
                          [alert show];
                      }
                      
-                     sessionRequestInProgress = NO;
+                     dispatch_async(dispatch_get_main_queue(), ^{
+                         _buddyUp.enabled = NO;
+                         [_buddyUp setNeedsDisplay];
+                     });
                  }];
             }
         }
@@ -99,7 +186,6 @@
 
 -(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-    //[_activityIndicator stopAnimating];
     NSLog(@"ERROR: %@", error);
     if ([[error domain] caseInsensitiveCompare:kCLErrorDomain] == NSOrderedSame)
     {
@@ -119,7 +205,6 @@
     }
     else if (status == kCLAuthorizationStatusAuthorizedWhenInUse)
     {
-        //[_activityIndicator startAnimating];
         NSLog(@"Authorized when in use . . .");
     }
     else if (status == kCLAuthorizationStatusAuthorizedAlways)

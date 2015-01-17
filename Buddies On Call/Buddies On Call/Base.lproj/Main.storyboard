@@ -40,10 +40,30 @@
                     </view>
                     <connections>
                         <outlet property="buddyUp" destination="adr-bP-LOI" id="nRm-Ql-HAO"/>
+                        <segue destination="uAZ-rP-uhy" kind="presentation" identifier="HomeToUserMap" id="8aZ-lE-hB6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="31" y="135"/>
+        </scene>
+        <!--Map View Controller-->
+        <scene sceneID="hKc-rZ-2dc">
+            <objects>
+                <viewController id="uAZ-rP-uhy" customClass="BOCMapViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="sfJ-f6-Cbv"/>
+                        <viewControllerLayoutGuide type="bottom" id="hqt-eQ-3AY"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="pgi-Ao-nFF">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BuB-Xr-aw9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="723" y="135"/>
         </scene>
     </scenes>
 </document>

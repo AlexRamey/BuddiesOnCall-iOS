@@ -37,9 +37,90 @@
     return self;
 }
 
--(void)openSessionForUser:(NSString *)user location:(NSString *)locationID completion:(void (^)(NSError *)) completion
+-(void)createUserObjectWithName:(NSString *)name email:(NSString *)email completion:(void (^)(NSError *, NSNumber *))completion
 {
-    NSData *postData = [[NSString stringWithFormat:@"{\"userid\":\"%@\",\"buddyid\":\"NIL\",\"firstlocationid\":\"%@\"}", user, locationID] dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *postData = [[NSString stringWithFormat:@"{\"name\":\"%@\", \"email\":\"%@\"}", name, email] dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://boffo-server.bitnamiapp.com:5000/users"]];
+    request.HTTPBody = postData;
+    request.HTTPMethod = @"POST";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    
+    NSURLSessionDataTask *task = [_session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
+    {
+        if (error)
+        {
+            NSLog(@"Error: %@", error);
+            completion(error, nil);
+        }
+        else
+        {
+            NSError *parseError = nil;
+            
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&parseError];
+            NSLog(@"Create User JSON: %@", json);
+            if (parseError)
+            {
+                completion(parseError, nil);
+            }
+            else if (![json objectForKey:@"added"])
+            {
+                NSError *userNotAdded = [[NSError alloc] initWithDomain:@"USER_NOT_Added" code:500 userInfo:nil];
+                completion(userNotAdded, nil);
+            }
+            else
+            {
+                NSNumber *userID = [json objectForKey:@"added"];
+                completion(nil, userID);
+            }
+        }
+        
+    }];
+    
+    [task resume];
+}
+
+-(void)verifyUserObjectID:(NSNumber *)userID completion:(void (^)(NSError *))completion
+{
+    NSString *url = [[NSString stringWithFormat:@"http://boffo-server.bitnamiapp.com:5000/users/%d", [userID intValue]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    request.HTTPMethod = @"GET";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    NSURLSessionDataTask *task = [_session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) //either request went wrong or there isn't a user with this id
+        {
+            NSLog(@"Error: %@", error);
+            completion(error);
+        }
+        else
+        {
+            NSError *parseError = nil;
+            
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&parseError];
+            NSLog(@"Verify User JSON: %@", json);
+            if (parseError)
+            {
+                completion(parseError);
+            }
+            else if (![json objectForKey:@"id"])
+            {
+                NSError *userNotFound = [[NSError alloc] initWithDomain:@"USER_NOT_FOUND" code:500 userInfo:nil];
+                completion(userNotFound);
+            }
+            else
+            {
+                completion(nil);
+            }
+        }
+    }];
+    
+    [task resume];
+}
+
+-(void)openSessionForUser:(NSString *)user location:(NSString *)locationID completion:(void (^)(NSError *, NSNumber *)) completion
+{
+    NSData *postData = [[NSString stringWithFormat:@"{\"userid\":\"%@\",\"status\":\"open\",\"firstlocationid\":\"%@\"}", user, locationID] dataUsingEncoding:NSUTF8StringEncoding];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://boffo-server.bitnamiapp.com:5000/sessions"]];
     request.HTTPBody = postData;
@@ -49,19 +130,36 @@
         if (error)
         {
             NSLog(@"Error: %@", error);
-            completion(error);
+            completion(error, nil);
         }
         else
         {
-            NSLog(@"Response: %@", response);
-            completion(nil);
+            NSError *parseError = nil;
+            
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&parseError];
+            
+            NSLog(@"Create Session JSON: %@", json);
+            
+            if (parseError)
+            {
+                completion(parseError, nil);
+            }
+            else if (![json objectForKey:@"added"])
+            {
+                NSError *sessionNotAdded = [[NSError alloc] initWithDomain:@"SESSION_NOT_ADDED" code:500 userInfo:nil];
+                completion(sessionNotAdded, nil);
+            }
+            else
+            {
+                completion(nil,[json objectForKey:@"added"]);
+            }
         }
     }];
     
     [task resume];
 }
 
--(void)postLocation:(CLLocation *)location forUser:(NSString *)user completion:(void (^)(NSError *, NSString *))completion
+-(void)postLocation:(CLLocation *)location forUser:(NSString *)user completion:(void (^)(NSError *, NSNumber *))completion
 {
     int time = (int)[[NSDate date] timeIntervalSince1970];
     
@@ -82,12 +180,33 @@
         }
         else
         {
-            NSLog(@"Response: %@", response);
-            completion(nil, @"TEST");
+            NSError *parseError = nil;
+            
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&parseError];
+            
+            NSLog(@"Post Location JSON: %@", json);
+            
+            if (parseError)
+            {
+                completion(parseError, nil);
+            }
+            else if (![json objectForKey:@"added"])
+            {
+                NSError *locationNotAdded = [[NSError alloc] initWithDomain:@"LOCATION_NOT_ADDED" code:500 userInfo:nil];
+                completion(locationNotAdded, nil);
+            }
+            else
+            {
+                completion(nil,[json objectForKey:@"added"]);
+            }
         }
     }];
   
     [task resume];
 }
 
+-(void)checkSessionStatusesWithCompletion:(void (^)(NSError *))completion
+{
+    //TODO
+}
 @end

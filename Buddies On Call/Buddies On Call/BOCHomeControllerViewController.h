@@ -15,6 +15,10 @@
     CLLocation *recentLocation;
     BOOL isSessionInProgress;
     BOOL sessionRequestInProgress;
+    BOOL isLoggedIn;
+    BOOL loginInProgress;
+    
+    int incomingLocationCounter;
 }
 
 @property (nonatomic, strong) CLLocationManager *locationManager;

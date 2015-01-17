@@ -16,12 +16,16 @@
 +(BOCHTTPClient *)sharedClient;
 
 //User Methods
--(void)getUserObjectWithCompletion:(void (^)(NSError *)) completion;
+-(void)createUserObjectWithName:(NSString *)name email:(NSString *)email completion:(void (^)(NSError *, NSNumber *)) completion;
 
--(void)openSessionForUser:(NSString *)user location:(NSString *)locationID completion:(void (^)(NSError *)) completion;
+-(void)verifyUserObjectID:(NSNumber *)userID completion:(void (^)(NSError *))completion;
 
--(void)postLocation:(CLLocation *)location forUser:(NSString *)user completion:(void (^)(NSError *, NSString *locationID))completion;
+-(void)openSessionForUser:(NSString *)user location:(NSString *)locationID completion:(void (^)(NSError *, NSNumber *)) completion;
+
+-(void)postLocation:(CLLocation *)location forUser:(NSString *)user completion:(void (^)(NSError *, NSNumber *locationID))completion;
 
 -(void)checkSessionStatusesWithCompletion:(void (^)(NSError *)) completion;
+
+-(void)closeSessions;//upon app termination, mark all sessions as resolved . . .
 
 @end
