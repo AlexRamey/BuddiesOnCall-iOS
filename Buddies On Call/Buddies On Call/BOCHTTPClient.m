@@ -17,53 +17,77 @@
     static dispatch_once_t onceToken;
     
     dispatch_once(&onceToken, ^{
-        sharedClient = [[self alloc] initWithBaseURL:[NSURL URLWithString:@"http://boffo-server.bitnamiapp.com:5000/"]];
+        sharedClient = [[self alloc] init];
     });
     
     return sharedClient;
 }
 
--(id)initWithBaseURL:(NSURL *)url
+-(id)init
 {
-    self = [super initWithBaseURL:url];
+    self = [super init];
     
     if (self)
     {
-        AFHTTPRequestSerializer *requestSerializer = [AFHTTPRequestSerializer serializer];
-        [requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-        self.requestSerializer = requestSerializer;
-        self.responseSerializer = [AFJSONResponseSerializer serializer];
+        //custom initialization
+        NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+        _session = [NSURLSession sessionWithConfiguration:sessionConfig];
     }
     
     return self;
 }
 
--(void)initiateBuddyRequestWithStartLocation:(CLLocation *)startLocation completion:(void (^)(NSError *))completion
+-(void)openSessionForUser:(NSString *)user location:(NSString *)locationID completion:(void (^)(NSError *)) completion
 {
-    NSString *userID = @"abr8xq";
+    NSData *postData = [[NSString stringWithFormat:@"{\"userid\":\"%@\",\"buddyid\":\"NIL\",\"firstlocationid\":\"%@\"}", user, locationID] dataUsingEncoding:NSUTF8StringEncoding];
     
-    NSString *latitude = [[NSNumber numberWithDouble:startLocation.coordinate.latitude] stringValue];
-    NSString *longitude = [[NSNumber numberWithDouble:startLocation.coordinate.longitude] stringValue];
-    
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                            userID, @"userid",
-                            latitude, @"lat",
-                            longitude, @"lng",
-                            nil];
-    
-    [self POST:@"/locations" parameters:params success:^(NSURLSessionDataTask *task, id responseObject) {
-        if (responseObject)
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://boffo-server.bitnamiapp.com:5000/sessions"]];
+    request.HTTPBody = postData;
+    request.HTTPMethod = @"POST";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    NSURLSessionDataTask *task = [_session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error)
         {
-            NSLog(@"Response: %@", responseObject);
+            NSLog(@"Error: %@", error);
+            completion(error);
+        }
+        else
+        {
+            NSLog(@"Response: %@", response);
             completion(nil);
         }
-    } failure:^(NSURLSessionDataTask *task, NSError *error) {
-       if (error)
-       {
-           NSLog(@"Error: %@", error);
-           completion(error);
-       }
     }];
+    
+    [task resume];
+}
+
+-(void)postLocation:(CLLocation *)location forUser:(NSString *)user completion:(void (^)(NSError *, NSString *))completion
+{
+    int time = (int)[[NSDate date] timeIntervalSince1970];
+    
+    NSString *latitude = [[NSNumber numberWithDouble:location.coordinate.latitude] stringValue];
+    NSString *longitude = [[NSNumber numberWithDouble:location.coordinate.longitude] stringValue];
+    
+    NSData *postData = [[NSString stringWithFormat:@"{\"userid\":\"%@\",\"lat\":\"%@\",\"lng\":\"%@\", \"time\" : %d}", user, latitude, longitude, time] dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://boffo-server.bitnamiapp.com:5000/locations"]];
+    request.HTTPBody = postData;
+    request.HTTPMethod = @"POST";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    NSURLSessionDataTask *task = [_session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error)
+        {
+            NSLog(@"Error: %@", error);
+            completion(error, nil);
+        }
+        else
+        {
+            NSLog(@"Response: %@", response);
+            completion(nil, @"TEST");
+        }
+    }];
+  
+    [task resume];
 }
 
 @end

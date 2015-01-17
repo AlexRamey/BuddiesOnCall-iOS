@@ -10,6 +10,10 @@
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
+extern NSString * const BOC_IS_FIRST_LAUNCH_KEY;
+
+extern NSString * const BOC_USER_ID_KEY;
+
 @property (strong, nonatomic) UIWindow *window;
 
 

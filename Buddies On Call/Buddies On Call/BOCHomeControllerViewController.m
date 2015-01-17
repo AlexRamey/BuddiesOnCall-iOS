@@ -26,9 +26,10 @@
         _locationManager = [[CLLocationManager alloc] init];
         [_locationManager setDelegate:self];
         [_locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
-        [_locationManager requestWhenInUseAuthorization];
+        [_locationManager requestAlwaysAuthorization];
         
-        isSessionStart = YES;
+        isSessionInProgress = NO;
+        sessionRequestInProgress = NO;
     }
     
     return self;
@@ -39,6 +40,7 @@
     // Do any additional setup after loading the view.
     _buddyUp.backgroundColor = [UIColor UVABlue];
     [_buddyUp setTitleColor:[UIColor UVAWhite] forState:UIControlStateNormal];
+    [_buddyUp setTitle:@"Buddy Up!" forState:UIControlStateNormal];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -53,17 +55,11 @@
 
 -(IBAction)buddyUp:(id)sender
 {
-    _buddyUp.enabled = NO;
-    
-    if (isSessionStart == YES) //start session
+    if (isSessionInProgress == NO && sessionRequestInProgress == NO)
     {
+        sessionRequestInProgress = YES;
         [_locationManager startUpdatingLocation];
     }
-    else //cancel session
-    {
-        NSLog(@"Cancel Session");
-    }
-    
 }
 
 #pragma mark - CLLocationManagerDelegate Methods
@@ -71,28 +67,34 @@
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
     //[_activityIndicator stopAnimating];
-    [_locationManager stopUpdatingLocation];
+    NSLog(@"DID UPDATE LOC");
+    recentLocation = [locations objectAtIndex:([locations count]-1)];
     
-    if (isSessionStart)
+    [_httpClient postLocation:recentLocation forUser:@"abr8xq" completion:^(NSError *error, NSString *locationID)
     {
-        //Start the Session
-        startLocation = [locations objectAtIndex:([locations count]-1)];
-        
-        [_httpClient initiateBuddyRequestWithStartLocation:startLocation completion:^(NSError *error) {
-            if (!error)
+        if (!error)
+        {
+            NSLog(@"Did Post Location");
+            if (isSessionInProgress == NO && sessionRequestInProgress == YES)
             {
-                [_buddyUp setTitle:@"Cancel Request" forState:UIControlStateNormal];
-                isSessionStart = NO;
-                _buddyUp.enabled = YES;
+                [_httpClient openSessionForUser:@"abr8xq" location:locationID completion:^(NSError *error)
+                 {
+                     if (!error)
+                     {
+                         isSessionInProgress = YES;
+                         NSLog(@"Session In Progress!");
+                     }
+                     else
+                     {
+                         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to start session, please try again." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                         [alert show];
+                     }
+                     
+                     sessionRequestInProgress = NO;
+                 }];
             }
-        }];
-    }
-    else
-    {
-        //handle location update
-    }
-    
-    NSLog(@"Success: %@", startLocation);
+        }
+    }];
 }
 
 -(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
@@ -107,14 +109,6 @@
             [alert show];
         }
     }
-    
-    if (isSessionStart)
-    {
-        startLocation = nil;
-        _buddyUp.enabled = YES;
-    }
-    
-    [_locationManager stopUpdatingLocation];
 }
 
 -(void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
@@ -126,7 +120,11 @@
     else if (status == kCLAuthorizationStatusAuthorizedWhenInUse)
     {
         //[_activityIndicator startAnimating];
-        NSLog(@"Authorized");
+        NSLog(@"Authorized when in use . . .");
+    }
+    else if (status == kCLAuthorizationStatusAuthorizedAlways)
+    {
+        NSLog(@"Always Authorized");
     }
     else
     {

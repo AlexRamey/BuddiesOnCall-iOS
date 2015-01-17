@@ -14,6 +14,24 @@
 
 @implementation AppDelegate
 
+NSString * const BOC_IS_FIRST_LAUNCH_KEY = @"BOC_IS_FIRST_LAUNCH_KEY";
+
+NSString *const BOC_USER_ID_KEY = @"BOC_USER_ID_KEY";
+
++(void)initialize
+{
+    //Register Factory Defaults, which will be created and temporarily stored in the registration
+    //domain of NSUserDefaults. In the application domain, if no value has been assigned yet to a
+    //specified key, then the application will look in the registration domain. The application domain
+    //persists, so once a value has been set, factory defaults will always be ignored
+    
+    NSDictionary *defaults = @{
+                               BOC_IS_FIRST_LAUNCH_KEY : @YES,
+                               BOC_USER_ID_KEY : @""
+                               };
+    
+    [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.

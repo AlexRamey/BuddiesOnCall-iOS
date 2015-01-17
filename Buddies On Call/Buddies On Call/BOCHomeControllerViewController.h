@@ -12,8 +12,9 @@
 
 @interface BOCHomeControllerViewController : UIViewController <CLLocationManagerDelegate>
 {
-    CLLocation *startLocation;
-    BOOL isSessionStart;
+    CLLocation *recentLocation;
+    BOOL isSessionInProgress;
+    BOOL sessionRequestInProgress;
 }
 
 @property (nonatomic, strong) CLLocationManager *locationManager;

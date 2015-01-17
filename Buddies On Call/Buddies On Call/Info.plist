@@ -4,6 +4,8 @@
 <dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Say yes so we can send buddies to you!</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Accept so buddies can find you!</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>

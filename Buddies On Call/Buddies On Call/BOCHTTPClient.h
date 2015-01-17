@@ -9,10 +9,19 @@
 #import "AFHTTPSessionManager.h"
 #import <CoreLocation/CoreLocation.h>
 
-@interface BOCHTTPClient : AFHTTPSessionManager
+@interface BOCHTTPClient : NSObject
+
+@property (nonatomic, strong) NSURLSession *session;
 
 +(BOCHTTPClient *)sharedClient;
 
--(void)initiateBuddyRequestWithStartLocation:(CLLocation *)startLocation completion:(void (^)(NSError *))completion;
+//User Methods
+-(void)getUserObjectWithCompletion:(void (^)(NSError *)) completion;
+
+-(void)openSessionForUser:(NSString *)user location:(NSString *)locationID completion:(void (^)(NSError *)) completion;
+
+-(void)postLocation:(CLLocation *)location forUser:(NSString *)user completion:(void (^)(NSError *, NSString *locationID))completion;
+
+-(void)checkSessionStatusesWithCompletion:(void (^)(NSError *)) completion;
 
 @end
