@@ -58,9 +58,13 @@ static NSString * const reuseIdentifier = @"BUDDY_ANNOTATION_REUSE_IDENTIFIER";
     [[BOCRefreshService sharedService] setMapController:nil];
 }
 
--(void)drawBuddies:(NSDictionary *)buddies
+-(void)drawBuddies:(NSDictionary *)buddies withLocationData:(NSDictionary *)locations
 {
+    NSLog(@"Draw Buddies");
     
+    NSLog(@"Buddies: %@", buddies);
+    
+    NSLog(@"Location Data: %@", locations);
 }
 
 #pragma mark - MKMapViewDelegate Methods

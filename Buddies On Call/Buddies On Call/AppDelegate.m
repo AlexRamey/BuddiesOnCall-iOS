@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "BOCHTTPClient.h"
 
 @interface AppDelegate ()
 
@@ -38,6 +39,17 @@ NSString * const BOC_SESSION_ID_KEY = @"BOC_SESSION_ID_KEY";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    //Resolve all previously started sessions . . .
+    NSLog(@"Application Did Launch");
+    
+    NSNumber *userID = [[NSUserDefaults standardUserDefaults] objectForKey:BOC_USER_ID_KEY];
+    
+    if ([userID intValue] != 0)
+    {
+        [[BOCHTTPClient sharedClient] resolveAllSessionsForUser:userID];
+    }
+    
     return YES;
 }
 
@@ -61,6 +73,18 @@ NSString * const BOC_SESSION_ID_KEY = @"BOC_SESSION_ID_KEY";
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    /*
+     unreliable . . . if a user terminates the app, then their session may not get updated . . .
+    NSLog(@"Application will terminate");
+    
+    NSNumber *sessionID = [[NSUserDefaults standardUserDefaults] objectForKey:BOC_SESSION_ID_KEY];
+    
+    if ([sessionID intValue] != -1)
+    {
+        [[BOCHTTPClient sharedClient] markSessionResolved:sessionID];
+        NSLog(@"Session %d told to resolve", [sessionID intValue]);
+    }
+    */
 }
 
 @end

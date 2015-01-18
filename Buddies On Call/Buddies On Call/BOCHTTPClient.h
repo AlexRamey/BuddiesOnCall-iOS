@@ -19,12 +19,21 @@
 
 -(void)verifyUserObjectID:(NSNumber *)userID completion:(void (^)(NSError *))completion;
 
+//TODO: Remove Method
+-(void)makeFakeSessionForUser:(NSNumber *)userID location:(NSString *)locationID completion:(void (^)(NSError *, NSNumber *)) completion;
+
 -(void)openSessionForUser:(NSNumber *)userID location:(NSString *)locationID completion:(void (^)(NSError *, NSNumber *)) completion;
 
 -(void)postLocation:(CLLocation *)location forUser:(NSNumber *)userID completion:(void (^)(NSError *, NSNumber *locationID))completion;
 
--(void)fetchUnresolvedSessionsForUser:(NSNumber *)userID completion:(void (^)(NSError *, NSArray *))completion;
+-(void)fetchUnresolvedSessionsForUser:(NSNumber *)userID completion:(void (^)(NSError *, NSDictionary *))completion;
 
 -(void)fetchLastLocationForBuddy:(NSString *)buddyID completion:(void (^)(NSError *, NSDictionary *))completion;
+
+-(void)fetchInformationForBuddy:(NSString *)buddyID completion:(void (^)(NSError *, NSDictionary *)) completion;
+
+-(void)resolveAllSessionsForUser:(NSNumber *)userID;
+
+-(void)markSessionResolved:(NSNumber *)session;
 
 @end

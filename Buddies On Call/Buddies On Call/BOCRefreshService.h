@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "BOCHTTPClient.h"
-#import "BOCHomeControllerViewController.h"
 #import "BOCMapViewController.h"
+#import "BOCHomeControllerViewController.h"
 
 @interface BOCRefreshService : NSObject
 {
@@ -19,8 +19,8 @@
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) BOCHTTPClient *httpClient;
 
-@property (nonatomic, weak) BOCHomeControllerViewController *homeController;
-@property (nonatomic, weak) BOCMapViewController *mapController;
+@property (nonatomic, strong) BOCMapViewController *mapController;
+@property (nonatomic, strong) BOCHomeControllerViewController *homeController;
 
 +(BOCRefreshService *)sharedService;
 

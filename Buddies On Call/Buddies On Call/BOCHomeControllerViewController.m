@@ -10,7 +10,6 @@
 #import "BOCMapViewController.h"
 #import "AppDelegate.h"
 #import "UIColor+Theme.h"
-#import "BOCRefreshService.h"
 
 @interface BOCHomeControllerViewController ()
 
@@ -25,7 +24,6 @@
     if (self)
     {
         _httpClient = [BOCHTTPClient sharedClient];
-        [[BOCRefreshService sharedService] setHomeController:self];
         
         _locationManager = [[CLLocationManager alloc] init];
         [_locationManager setDelegate:self];
@@ -120,6 +118,10 @@
 
 -(IBAction)buddyUp:(id)sender
 {
+    [_httpClient makeFakeSessionForUser:[[NSUserDefaults standardUserDefaults] objectForKey:BOC_USER_ID_KEY] location:@"370" completion:^(NSError *error, NSNumber *number) {
+        
+    }];
+    
     void (^attemptStartSession)() = ^(){
         if (isLoggedIn && isSessionInProgress == NO && sessionRequestInProgress == NO)
         {

@@ -61,11 +61,11 @@
     
     inProgress = YES;
     
-    [_httpClient fetchUnresolvedSessionsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:BOC_USER_ID_KEY] completion:^(NSError *error, NSArray *sessions) {
+    [_httpClient fetchUnresolvedSessionsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:BOC_USER_ID_KEY] completion:^(NSError *error, NSDictionary *sessions) {
         if (!error)
         {
             //check to see if any of the sessions have status "resolved"
-            for (NSDictionary *session in sessions)
+            for (NSDictionary *session in [sessions objectForKey:@"sessions"])
             {
                 if ([[session objectForKey:@"status"] caseInsensitiveCompare:@"resolved"] == NSOrderedSame )
                 {
@@ -87,7 +87,7 @@
             }
             
             //check to see if any of the sessions have status "working"
-            for (NSDictionary *session in sessions)
+            for (NSDictionary *session in [sessions objectForKey:@"sessions"])
             {
                 if ([[session objectForKey:@"status"] caseInsensitiveCompare:@"working"] == NSOrderedSame )
                 {
@@ -108,7 +108,7 @@
             
             NSMutableDictionary *enrouteBuddies = [[NSMutableDictionary alloc] init];
             //check to see if any of the sessions have status "enroute"
-            for (NSDictionary *session in sessions)
+            for (NSDictionary *session in [sessions objectForKey:@"sessions"])
             {
                 if ([[session objectForKey:@"status"] caseInsensitiveCompare:@"enroute"] == NSOrderedSame )
                 {
@@ -121,31 +121,55 @@
             
             NSArray *buddyIDs = [enrouteBuddies allKeys];
             
-            __block int downloadCounter = (int)[buddyIDs count];
+            __block int completionCounter = 0;
             
-            enrouteBuddies = [[NSMutableDictionary alloc] init];
+            __block int locationDownloadCounter = (int)[buddyIDs count];
+            
+            __block int buddyInfoDownloadCounter = (int)[buddyIDs count];
+            
+            __block NSMutableDictionary *buddyLocations = [[NSMutableDictionary alloc] init];
+            
+            __block NSMutableDictionary *buddyInformation = [[NSMutableDictionary alloc] init];
             
             for (NSString *buddyID in buddyIDs)
             {
                 [_httpClient fetchLastLocationForBuddy:buddyID completion:^(NSError *error, NSDictionary *location) {
                     if (!error)
                     {
-                        [enrouteBuddies setObject:location forKey:buddyID];
+                        [buddyLocations setObject:location forKey:buddyID];
                     }
-                    if (--downloadCounter == 0)
+                    if (--locationDownloadCounter == 0 && ++completionCounter == 2)
                     {
                         inProgress = NO;
                         dispatch_async(dispatch_get_main_queue(), ^{
                             if (self.mapController)
                             {
-                                [self.mapController drawBuddies:[NSDictionary dictionaryWithDictionary:enrouteBuddies]];
+                                [self.mapController drawBuddies:buddyInformation withLocationData:buddyLocations];
                             }
                         });
                     }
                 }];
             }
             
-            
+            for (NSString *buddyID in buddyIDs)
+            {
+                [_httpClient fetchInformationForBuddy:buddyID completion:^(NSError *error, NSDictionary *buddy) {
+                    if (!error)
+                    {
+                        [buddyInformation setObject:buddy forKey:buddyID];
+                    }
+                    if (--buddyInfoDownloadCounter == 0 && ++completionCounter == 2)
+                    {
+                        inProgress = NO;
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            if (self.mapController)
+                            {
+                                [self.mapController drawBuddies:buddyInformation withLocationData:buddyLocations];
+                            }
+                        });
+                    }
+                }];
+            }
         }
         else
         {

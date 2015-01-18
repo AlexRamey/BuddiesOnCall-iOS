@@ -15,7 +15,7 @@
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
 @property (nonatomic, strong) CLLocation *initialUserLocation;
 
--(void)drawBuddies:(NSDictionary *)buddies;
+-(void)drawBuddies:(NSDictionary *)buddies withLocationData:(NSDictionary *)locations;
 
 -(void)buddiedUp;
 

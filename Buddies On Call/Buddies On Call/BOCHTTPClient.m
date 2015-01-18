@@ -118,6 +118,47 @@
     [task resume];
 }
 
+-(void)makeFakeSessionForUser:(NSNumber *)userID location:(NSString *)locationID completion:(void (^)(NSError *, NSNumber *)) completion
+{
+    NSData *postData = [[NSString stringWithFormat:@"{\"userid\":\"%@\",\"status\":\"open\",\"firstlocationid\":\"%@\",\"buddyid\":\"2\" }", [userID stringValue], locationID] dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://boffo-server.bitnamiapp.com:5000/sessions"]];
+    request.HTTPBody = postData;
+    request.HTTPMethod = @"POST";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    NSURLSessionDataTask *task = [_session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error)
+        {
+            NSLog(@"Error: %@", error);
+            completion(error, nil);
+        }
+        else
+        {
+            NSError *parseError = nil;
+            
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&parseError];
+            
+            NSLog(@"Create Fake Session JSON: %@", json);
+            
+            if (parseError)
+            {
+                completion(parseError, nil);
+            }
+            else if (![json objectForKey:@"added"])
+            {
+                NSError *sessionNotAdded = [[NSError alloc] initWithDomain:@"SESSION_NOT_ADDED" code:500 userInfo:nil];
+                completion(sessionNotAdded, nil);
+            }
+            else
+            {
+                completion(nil,[json objectForKey:@"added"]);
+            }
+        }
+    }];
+    
+    [task resume];
+}
+
 -(void)openSessionForUser:(NSNumber *)userID location:(NSString *)locationID completion:(void (^)(NSError *, NSNumber *)) completion
 {
     NSData *postData = [[NSString stringWithFormat:@"{\"userid\":\"%@\",\"status\":\"open\",\"firstlocationid\":\"%@\"}", [userID stringValue], locationID] dataUsingEncoding:NSUTF8StringEncoding];
@@ -205,7 +246,7 @@
     [task resume];
 }
 
--(void)fetchUnresolvedSessionsForUser:(NSNumber *)userID completion:(void (^)(NSError *, NSArray *))completion
+-(void)fetchUnresolvedSessionsForUser:(NSNumber *)userID completion:(void (^)(NSError *, NSDictionary *))completion
 {
     NSString *url = [[NSString stringWithFormat:@"http://boffo-server.bitnamiapp.com:5000/users/%@/sessions", [userID stringValue]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
@@ -222,7 +263,7 @@
         {
             NSError *parseError = nil;
             
-            NSArray *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&parseError];
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&parseError];
             NSLog(@"Fetch Sessions JSON: %@", json);
             
             if (parseError)
@@ -269,6 +310,67 @@
             }
         }
     }];
+    
+    [task resume];
+}
+
+-(void)fetchInformationForBuddy:(NSString *)buddyID completion:(void (^)(NSError *, NSDictionary *))completion
+{
+    NSString *url = [[NSString stringWithFormat:@"http://boffo-server.bitnamiapp.com:5000/buddies/%@", buddyID] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    request.HTTPMethod = @"GET";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    NSURLSessionDataTask *task = [_session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) //either request went wrong or there isn't a user with this id
+        {
+            NSLog(@"Error: %@", error);
+            completion(error, nil);
+        }
+        else
+        {
+            NSError *parseError = nil;
+            
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&parseError];
+            NSLog(@"Fetch Last Buddy Location JSON: %@", json);
+            
+            if (parseError)
+            {
+                completion(parseError, nil);
+            }
+            else
+            {
+                completion(nil, json);
+            }
+        }
+    }];
+    
+    [task resume];
+}
+
+-(void)resolveAllSessionsForUser:(NSNumber *)userID
+{
+    [self fetchUnresolvedSessionsForUser:userID completion:^(NSError *error, NSDictionary *sessions) {
+        if (!error)
+        {
+            for (NSDictionary *session in [sessions objectForKey:@"sessions"])
+            {
+                [self markSessionResolved:[session objectForKey:@"id"]];
+            }
+        }
+    }];
+}
+
+-(void)markSessionResolved:(NSNumber *)session
+{
+    NSData *putData = [@"{\"status\":\"resolved\"}" dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://boffo-server.bitnamiapp.com:5000/sessions/%d", [session intValue]]]];
+    request.HTTPBody = putData;
+    request.HTTPMethod = @"PUT";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    
+    NSURLSessionDataTask *task = [_session dataTaskWithRequest:request];
     
     [task resume];
 }

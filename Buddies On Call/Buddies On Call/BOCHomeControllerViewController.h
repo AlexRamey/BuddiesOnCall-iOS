@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 #import "BOCHTTPClient.h"
+#import "BOCRefreshService.h"
 
 @interface BOCHomeControllerViewController : UIViewController <CLLocationManagerDelegate>
 {
@@ -23,7 +24,7 @@
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) BOCHTTPClient *httpClient;
-
+@property (nonatomic, strong) BOCRefreshService *sharedService;
 @property (nonatomic, strong) IBOutlet UIButton *buddyUp;
 
 -(void)sessionResolved;
