@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 HooApps. All rights reserved.
 //
 
-#import "AFHTTPSessionManager.h"
 #import <CoreLocation/CoreLocation.h>
 
 @interface BOCHTTPClient : NSObject
@@ -20,12 +19,12 @@
 
 -(void)verifyUserObjectID:(NSNumber *)userID completion:(void (^)(NSError *))completion;
 
--(void)openSessionForUser:(NSString *)user location:(NSString *)locationID completion:(void (^)(NSError *, NSNumber *)) completion;
+-(void)openSessionForUser:(NSNumber *)userID location:(NSString *)locationID completion:(void (^)(NSError *, NSNumber *)) completion;
 
--(void)postLocation:(CLLocation *)location forUser:(NSString *)user completion:(void (^)(NSError *, NSNumber *locationID))completion;
+-(void)postLocation:(CLLocation *)location forUser:(NSNumber *)userID completion:(void (^)(NSError *, NSNumber *locationID))completion;
 
--(void)checkSessionStatusesWithCompletion:(void (^)(NSError *)) completion;
+-(void)fetchUnresolvedSessionsForUser:(NSNumber *)userID completion:(void (^)(NSError *, NSArray *))completion;
 
--(void)closeSessions;//upon app termination, mark all sessions as resolved . . .
+-(void)fetchLastLocationForBuddy:(NSString *)buddyID completion:(void (^)(NSError *, NSDictionary *))completion;
 
 @end

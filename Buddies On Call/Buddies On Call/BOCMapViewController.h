@@ -7,7 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MapKit/MapKit.h>
+#import "BOCHTTPClient.h"
 
-@interface BOCMapViewController : UIViewController
+@interface BOCMapViewController : UIViewController <MKMapViewDelegate>
+
+@property (nonatomic, weak) IBOutlet MKMapView *mapView;
+@property (nonatomic, strong) CLLocation *initialUserLocation;
+
+-(void)drawBuddies:(NSDictionary *)buddies;
+
+-(void)buddiedUp;
 
 @end

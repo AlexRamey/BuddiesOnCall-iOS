@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Home Controller View Controller-->
@@ -45,7 +46,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="31" y="135"/>
+            <point key="canvasLocation" x="-1" y="135"/>
         </scene>
         <!--Map View Controller-->
         <scene sceneID="hKc-rZ-2dc">
@@ -58,12 +59,29 @@
                     <view key="view" contentMode="scaleToFill" id="pgi-Ao-nFF">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="hybrid" rotateEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TXL-dp-vik">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <connections>
+                                    <outlet property="delegate" destination="uAZ-rP-uhy" id="lMR-e1-RDX"/>
+                                </connections>
+                            </mapView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="TXL-dp-vik" firstAttribute="leading" secondItem="pgi-Ao-nFF" secondAttribute="leadingMargin" constant="-16" id="GSo-Lh-w3m"/>
+                            <constraint firstItem="TXL-dp-vik" firstAttribute="top" secondItem="sfJ-f6-Cbv" secondAttribute="bottom" constant="-20" id="I6q-Si-mIG"/>
+                            <constraint firstItem="hqt-eQ-3AY" firstAttribute="top" secondItem="TXL-dp-vik" secondAttribute="bottom" id="fSv-Dw-Vr4"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="TXL-dp-vik" secondAttribute="trailing" constant="-16" id="jZi-Xz-tUt"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="mapView" destination="TXL-dp-vik" id="3HZ-CX-bM6"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BuB-Xr-aw9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="723" y="135"/>
+            <point key="canvasLocation" x="659" y="135"/>
         </scene>
     </scenes>
 </document>

@@ -10,6 +10,9 @@
 		0ADE30926FF8AE6F6BF7BAA7 /* libPods-Buddies On Call.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FFD5090988D4D913FE9BCE /* libPods-Buddies On Call.a */; };
 		D086602E1A6AFB78008A7FDF /* BOCMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D086602D1A6AFB78008A7FDF /* BOCMapViewController.m */; };
 		D08660311A6AFB9F008A7FDF /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D08660301A6AFB9F008A7FDF /* MapKit.framework */; };
+		D08660341A6B2227008A7FDF /* BOCBuddyAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = D08660331A6B2227008A7FDF /* BOCBuddyAnnotationView.m */; };
+		D08660371A6B22C2008A7FDF /* BOCBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = D08660361A6B22C2008A7FDF /* BOCBuddy.m */; };
+		D086603A1A6B2F29008A7FDF /* BOCRefreshService.m in Sources */ = {isa = PBXBuildFile; fileRef = D08660391A6B2F29008A7FDF /* BOCRefreshService.m */; };
 		D0BC21DB1A62F52800C2D765 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BC21DA1A62F52800C2D765 /* main.m */; };
 		D0BC21DE1A62F52800C2D765 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BC21DD1A62F52800C2D765 /* AppDelegate.m */; };
 		D0BC21E41A62F52800C2D765 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D0BC21E21A62F52800C2D765 /* Main.storyboard */; };
@@ -38,6 +41,12 @@
 		D086602C1A6AFB78008A7FDF /* BOCMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BOCMapViewController.h; sourceTree = "<group>"; };
 		D086602D1A6AFB78008A7FDF /* BOCMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BOCMapViewController.m; sourceTree = "<group>"; };
 		D08660301A6AFB9F008A7FDF /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		D08660321A6B2227008A7FDF /* BOCBuddyAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BOCBuddyAnnotationView.h; sourceTree = "<group>"; };
+		D08660331A6B2227008A7FDF /* BOCBuddyAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BOCBuddyAnnotationView.m; sourceTree = "<group>"; };
+		D08660351A6B22C2008A7FDF /* BOCBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BOCBuddy.h; sourceTree = "<group>"; };
+		D08660361A6B22C2008A7FDF /* BOCBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BOCBuddy.m; sourceTree = "<group>"; };
+		D08660381A6B2F29008A7FDF /* BOCRefreshService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BOCRefreshService.h; sourceTree = "<group>"; };
+		D08660391A6B2F29008A7FDF /* BOCRefreshService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BOCRefreshService.m; sourceTree = "<group>"; };
 		D0BC21D51A62F52800C2D765 /* Buddies On Call.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Buddies On Call.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0BC21D91A62F52800C2D765 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D0BC21DA1A62F52800C2D765 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -104,8 +113,21 @@
 			children = (
 				D086602C1A6AFB78008A7FDF /* BOCMapViewController.h */,
 				D086602D1A6AFB78008A7FDF /* BOCMapViewController.m */,
+				D08660321A6B2227008A7FDF /* BOCBuddyAnnotationView.h */,
+				D08660331A6B2227008A7FDF /* BOCBuddyAnnotationView.m */,
+				D08660351A6B22C2008A7FDF /* BOCBuddy.h */,
+				D08660361A6B22C2008A7FDF /* BOCBuddy.m */,
 			);
 			name = Map;
+			sourceTree = "<group>";
+		};
+		D086603B1A6B2F2C008A7FDF /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				D08660381A6B2F29008A7FDF /* BOCRefreshService.h */,
+				D08660391A6B2F29008A7FDF /* BOCRefreshService.m */,
+			);
+			name = Utility;
 			sourceTree = "<group>";
 		};
 		D0BC21CC1A62F52800C2D765 = {
@@ -131,6 +153,7 @@
 		D0BC21D71A62F52800C2D765 /* Buddies On Call */ = {
 			isa = PBXGroup;
 			children = (
+				D086603B1A6B2F2C008A7FDF /* Utility */,
 				D0BC22071A62F68700C2D765 /* Theme */,
 				D0BC21FE1A62F5BD00C2D765 /* Delegate */,
 				D0BC220E1A62F96000C2D765 /* HTTPClient */,
@@ -351,10 +374,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				D086602E1A6AFB78008A7FDF /* BOCMapViewController.m in Sources */,
+				D086603A1A6B2F29008A7FDF /* BOCRefreshService.m in Sources */,
+				D08660371A6B22C2008A7FDF /* BOCBuddy.m in Sources */,
 				D0BC22021A62F60300C2D765 /* BOCHomeControllerViewController.m in Sources */,
 				D0BC220D1A62F95D00C2D765 /* BOCHTTPClient.m in Sources */,
 				D0BC22061A62F68300C2D765 /* UIColor+Theme.m in Sources */,
 				D0BC21DE1A62F52800C2D765 /* AppDelegate.m in Sources */,
+				D08660341A6B2227008A7FDF /* BOCBuddyAnnotationView.m in Sources */,
 				D0BC21DB1A62F52800C2D765 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

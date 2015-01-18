@@ -7,8 +7,10 @@
 //
 
 #import "BOCHomeControllerViewController.h"
+#import "BOCMapViewController.h"
 #import "AppDelegate.h"
 #import "UIColor+Theme.h"
+#import "BOCRefreshService.h"
 
 @interface BOCHomeControllerViewController ()
 
@@ -23,6 +25,7 @@
     if (self)
     {
         _httpClient = [BOCHTTPClient sharedClient];
+        [[BOCRefreshService sharedService] setHomeController:self];
         
         _locationManager = [[CLLocationManager alloc] init];
         [_locationManager setDelegate:self];
@@ -112,6 +115,7 @@
 -(void)dealloc
 {
     [_locationManager setDelegate:nil];
+    [[BOCRefreshService sharedService] setHomeController:nil];
 }
 
 -(IBAction)buddyUp:(id)sender
@@ -134,6 +138,15 @@
     }
 }
 
+-(void)sessionResolved
+{
+    if (self.presentedViewController)
+    {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+    _buddyUp.enabled = YES;
+}
+
 #pragma mark - CLLocationManagerDelegate Methods
 
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
@@ -145,7 +158,7 @@
         return;
     }
     
-    NSString *userID = [[NSUserDefaults standardUserDefaults] objectForKey:BOC_USER_ID_KEY];
+    NSNumber *userID = [[NSUserDefaults standardUserDefaults] objectForKey:BOC_USER_ID_KEY];
     
     [_httpClient postLocation:recentLocation forUser:userID completion:^(NSError *error, NSNumber *locationID)
     {
@@ -164,14 +177,19 @@
                  {
                      if (!error)
                      {
-                         isSessionInProgress = YES;
-                         [[NSUserDefaults standardUserDefaults] setObject:sessionID forKey:BOC_SESSION_ID_KEY];
-                         NSLog(@"Session Opened!");
+                         dispatch_async(dispatch_get_main_queue(), ^{
+                             isSessionInProgress = YES;
+                             [[NSUserDefaults standardUserDefaults] setObject:sessionID forKey:BOC_SESSION_ID_KEY];
+                             _buddyUp.enabled = NO;
+                             [self performSegueWithIdentifier:@"HomeToUserMap" sender:self];
+                         });
                      }
                      else
                      {
-                         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to start session, please try again." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-                         [alert show];
+                         dispatch_async(dispatch_get_main_queue(), ^{
+                             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to start session, please try again." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                             [alert show];
+                         });
                      }
                      
                      dispatch_async(dispatch_get_main_queue(), ^{
@@ -218,14 +236,19 @@
     }
 }
 
-/*
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([[segue destinationViewController] class] == [BOCMapViewController class])
+    {
+        BOCMapViewController *vc = (BOCMapViewController *)[segue destinationViewController];
+        
+        [vc setInitialUserLocation:recentLocation];
+        
+        [[BOCRefreshService sharedService] start];
+    }
 }
-*/
 
 @end

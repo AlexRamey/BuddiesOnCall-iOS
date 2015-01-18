@@ -13,10 +13,10 @@
 @interface BOCHomeControllerViewController : UIViewController <CLLocationManagerDelegate>
 {
     CLLocation *recentLocation;
-    BOOL isSessionInProgress;
-    BOOL sessionRequestInProgress;
-    BOOL isLoggedIn;
-    BOOL loginInProgress;
+    __block BOOL isSessionInProgress;
+    __block BOOL sessionRequestInProgress;
+    __block BOOL isLoggedIn;
+    __block BOOL loginInProgress;
     
     int incomingLocationCounter;
 }
@@ -25,5 +25,7 @@
 @property (nonatomic, strong) BOCHTTPClient *httpClient;
 
 @property (nonatomic, strong) IBOutlet UIButton *buddyUp;
+
+-(void)sessionResolved;
 
 @end
