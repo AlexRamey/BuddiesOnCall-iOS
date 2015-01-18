@@ -8,6 +8,8 @@
 
 #import "BOCRefreshService.h"
 #import "AppDelegate.h"
+#import "BOCMapViewController.h"
+#import "BOCHomeControllerViewController.h"
 
 @implementation BOCRefreshService
 
@@ -42,7 +44,9 @@
 -(void)start
 {
     _timer = [NSTimer timerWithTimeInterval:10.0 target:self selector:@selector(updateBuddiesAndSessionsInformationForUser:) userInfo:nil repeats:YES];
-    [_timer fire];
+    
+    [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSDefaultRunLoopMode];
+    
 }
 
 -(void)stop
@@ -120,6 +124,12 @@
             }
             
             NSArray *buddyIDs = [enrouteBuddies allKeys];
+            
+            if ([buddyIDs count] == 0)
+            {
+                inProgress = NO;
+                return;
+            }
             
             __block int completionCounter = 0;
             

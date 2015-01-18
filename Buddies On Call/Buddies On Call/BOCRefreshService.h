@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "BOCHTTPClient.h"
-#import "BOCMapViewController.h"
-#import "BOCHomeControllerViewController.h"
+
+@class BOCMapViewController, BOCHomeControllerViewController;
 
 @interface BOCRefreshService : NSObject
 {

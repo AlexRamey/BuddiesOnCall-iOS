@@ -120,7 +120,7 @@
 
 -(void)makeFakeSessionForUser:(NSNumber *)userID location:(NSString *)locationID completion:(void (^)(NSError *, NSNumber *)) completion
 {
-    NSData *postData = [[NSString stringWithFormat:@"{\"userid\":\"%@\",\"status\":\"open\",\"firstlocationid\":\"%@\",\"buddyid\":\"2\" }", [userID stringValue], locationID] dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *postData = [[NSString stringWithFormat:@"{\"userid\":\"%@\",\"status\":\"enroute\",\"firstlocationid\":\"%@\",\"buddyid\":\"2\" }", [userID stringValue], locationID] dataUsingEncoding:NSUTF8StringEncoding];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://boffo-server.bitnamiapp.com:5000/sessions"]];
     request.HTTPBody = postData;

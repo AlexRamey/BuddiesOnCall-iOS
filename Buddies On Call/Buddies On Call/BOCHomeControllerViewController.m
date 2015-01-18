@@ -25,6 +25,9 @@
     {
         _httpClient = [BOCHTTPClient sharedClient];
         
+        _sharedService = [BOCRefreshService sharedService];
+        [_sharedService setHomeController:self];
+        
         _locationManager = [[CLLocationManager alloc] init];
         [_locationManager setDelegate:self];
         [_locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
@@ -119,7 +122,14 @@
 -(IBAction)buddyUp:(id)sender
 {
     [_httpClient makeFakeSessionForUser:[[NSUserDefaults standardUserDefaults] objectForKey:BOC_USER_ID_KEY] location:@"370" completion:^(NSError *error, NSNumber *number) {
-        
+        if (!error)
+        {
+            NSLog(@"Fake Number: %d", [number intValue]);
+        }
+        else
+        {
+            NSLog(@"Error: %@", error);
+        }
     }];
     
     void (^attemptStartSession)() = ^(){
