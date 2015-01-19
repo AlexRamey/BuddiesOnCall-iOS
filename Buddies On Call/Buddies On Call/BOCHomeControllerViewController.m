@@ -170,6 +170,8 @@
     {
         [self dismissViewControllerAnimated:YES completion:nil];
     }
+    
+    isSessionInProgress = NO;
     _buddyUp.enabled = YES;
 }
 
@@ -179,7 +181,7 @@
 {
     recentLocation = [locations objectAtIndex:([locations count]-1)];
     
-    if (incomingLocationCounter++ % 5 != 0)
+    if (incomingLocationCounter++ % 10 != 0)
     {
         return;
     }
