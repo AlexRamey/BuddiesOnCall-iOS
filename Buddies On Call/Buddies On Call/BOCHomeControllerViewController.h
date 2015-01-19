@@ -24,7 +24,6 @@
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) BOCHTTPClient *httpClient;
-@property (nonatomic, strong) BOCRefreshService *sharedService;
 @property (nonatomic, strong) IBOutlet UIButton *buddyUp;
 
 -(void)sessionResolved;

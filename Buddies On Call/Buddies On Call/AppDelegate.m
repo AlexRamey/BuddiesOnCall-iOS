@@ -40,16 +40,6 @@ NSString * const BOC_SESSION_ID_KEY = @"BOC_SESSION_ID_KEY";
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    //Resolve all previously started sessions . . .
-    NSLog(@"Application Did Launch");
-    
-    NSNumber *userID = [[NSUserDefaults standardUserDefaults] objectForKey:BOC_USER_ID_KEY];
-    
-    if ([userID intValue] != 0)
-    {
-        [[BOCHTTPClient sharedClient] resolveAllSessionsForUser:userID];
-    }
-    
     return YES;
 }
 

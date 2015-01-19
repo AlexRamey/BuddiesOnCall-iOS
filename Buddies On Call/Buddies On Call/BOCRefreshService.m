@@ -69,25 +69,22 @@
         if (!error)
         {
             //check to see if any of the sessions have status "resolved"
-            for (NSDictionary *session in [sessions objectForKey:@"sessions"])
+            if([[sessions objectForKey:@"sessions"] count] == 0) //they have all been resolved!
             {
-                if ([[session objectForKey:@"status"] caseInsensitiveCompare:@"resolved"] == NSOrderedSame )
-                {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Alert" message:@"Session Resolved." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
                         [alert show];
+                        
+                        if (_homeController)
+                        {
+                            [_homeController sessionResolved];
+                        }
                     });
-                    
-                    if (_homeController)
-                    {
-                        [_homeController sessionResolved];
-                    }
                     
                     inProgress = NO;
                     [self stop];
                     
                     return;
-                }
             }
             
             //check to see if any of the sessions have status "working"
@@ -96,12 +93,11 @@
                 if ([[session objectForKey:@"status"] caseInsensitiveCompare:@"working"] == NSOrderedSame )
                 {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Alert" message:@"Your Buddy has Arrived!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-                        [alert show];
-                        
                         if (_mapController)
                         {
-                            [self.mapController.parentViewController dismissViewControllerAnimated:YES completion:nil];
+                            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Alert" message:@"Your Buddy has Arrived!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                            [alert show];
+                            [self.mapController dismissViewControllerAnimated:YES completion:nil];
                         }
                     });
                     

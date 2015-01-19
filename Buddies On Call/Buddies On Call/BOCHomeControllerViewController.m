@@ -25,8 +25,7 @@
     {
         _httpClient = [BOCHTTPClient sharedClient];
         
-        _sharedService = [BOCRefreshService sharedService];
-        [_sharedService setHomeController:self];
+        [[BOCRefreshService sharedService] setHomeController:self];
         
         _locationManager = [[CLLocationManager alloc] init];
         [_locationManager setDelegate:self];
@@ -49,9 +48,23 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    _buddyUp.backgroundColor = [UIColor UVABlue];
     [_buddyUp setTitleColor:[UIColor UVAWhite] forState:UIControlStateNormal];
     [_buddyUp setTitle:@"Buddy Up!" forState:UIControlStateNormal];
+    _buddyUp.enabled = NO;
+    
+    //Resolve Any Previously Initiated Sessions that are lingering . . .
+    NSNumber *userID = [[NSUserDefaults standardUserDefaults] objectForKey:BOC_USER_ID_KEY];
+    
+    if ([userID intValue] != 0)
+    {
+        //Don't let the app delete a session that gets started right after button press
+        [[BOCHTTPClient sharedClient] resolveAllSessionsForUser:userID completion:^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                _buddyUp.enabled = YES;
+                [_buddyUp setTitle:@"Session Active" forState:UIControlStateDisabled];
+            });
+        }];
+    }
 }
 
 -(void)loginWithCompletion:(void (^)(void))attemptStartSession
@@ -121,6 +134,7 @@
 
 -(IBAction)buddyUp:(id)sender
 {
+    /*
     [_httpClient makeFakeSessionForUser:[[NSUserDefaults standardUserDefaults] objectForKey:BOC_USER_ID_KEY] location:@"370" completion:^(NSError *error, NSNumber *number) {
         if (!error)
         {
@@ -131,9 +145,9 @@
             NSLog(@"Error: %@", error);
         }
     }];
-    
+    */
     void (^attemptStartSession)() = ^(){
-        if (isLoggedIn && isSessionInProgress == NO && sessionRequestInProgress == NO)
+        if (isLoggedIn && !isSessionInProgress && !sessionRequestInProgress)
         {
             sessionRequestInProgress = YES;
             [_locationManager startUpdatingLocation];
@@ -176,7 +190,6 @@
     {
         if (!error)
         {
-            NSLog(@"Did Post Location");
             if (isSessionInProgress == NO && sessionRequestInProgress == YES)
             {
                 sessionRequestInProgress = NO;
@@ -193,6 +206,7 @@
                              isSessionInProgress = YES;
                              [[NSUserDefaults standardUserDefaults] setObject:sessionID forKey:BOC_SESSION_ID_KEY];
                              _buddyUp.enabled = NO;
+                             [_buddyUp setNeedsDisplay];
                              [self performSegueWithIdentifier:@"HomeToUserMap" sender:self];
                          });
                      }
@@ -201,13 +215,10 @@
                          dispatch_async(dispatch_get_main_queue(), ^{
                              UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to start session, please try again." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
                              [alert show];
+                             _buddyUp.enabled = YES;
+                             [_buddyUp setNeedsDisplay];
                          });
                      }
-                     
-                     dispatch_async(dispatch_get_main_queue(), ^{
-                         _buddyUp.enabled = NO;
-                         [_buddyUp setNeedsDisplay];
-                     });
                  }];
             }
         }

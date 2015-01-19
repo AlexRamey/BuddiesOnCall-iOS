@@ -19,8 +19,8 @@
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) BOCHTTPClient *httpClient;
 
-@property (nonatomic, strong) BOCMapViewController *mapController;
-@property (nonatomic, strong) BOCHomeControllerViewController *homeController;
+@property (nonatomic, weak) BOCMapViewController *mapController;
+@property (nonatomic, weak) BOCHomeControllerViewController *homeController;
 
 +(BOCRefreshService *)sharedService;
 

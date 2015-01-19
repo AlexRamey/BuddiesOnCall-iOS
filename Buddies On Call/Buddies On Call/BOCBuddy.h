@@ -11,6 +11,8 @@
 
 @interface BOCBuddy : NSObject <MKAnnotation>
 
+-(id)initWithCoordinate:(CLLocationCoordinate2D)coord title:(NSString *)title subtitle:(NSString *)subtitle;
+
 //Required property from MKAnnotation
 @property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
 

@@ -120,7 +120,7 @@
 
 -(void)makeFakeSessionForUser:(NSNumber *)userID location:(NSString *)locationID completion:(void (^)(NSError *, NSNumber *)) completion
 {
-    NSData *postData = [[NSString stringWithFormat:@"{\"userid\":\"%@\",\"status\":\"enroute\",\"firstlocationid\":\"%@\",\"buddyid\":\"2\" }", [userID stringValue], locationID] dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *postData = [[NSString stringWithFormat:@"{\"userid\":\"%@\",\"status\":\"enroute\",\"firstlocationid\":\"%@\",\"buddyid\":\"1\" }", [userID stringValue], locationID] dataUsingEncoding:NSUTF8StringEncoding];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://boffo-server.bitnamiapp.com:5000/sessions"]];
     request.HTTPBody = postData;
@@ -304,6 +304,11 @@
             {
                 completion(parseError, nil);
             }
+            else if ([[json objectForKey:@"status"] intValue] == 500)
+            {
+                NSError *error = [[NSError alloc] init];
+                completion(error, nil);
+            }
             else
             {
                 completion(nil, json);
@@ -332,11 +337,16 @@
             NSError *parseError = nil;
             
             NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&parseError];
-            NSLog(@"Fetch Last Buddy Location JSON: %@", json);
+            NSLog(@"Fetch Buddy Info JSON: %@", json);
             
             if (parseError)
             {
                 completion(parseError, nil);
+            }
+            else if ([[json objectForKey:@"status"] intValue] == 500)
+            {
+                NSError *error = [[NSError alloc] init];
+                completion(error, nil);
             }
             else
             {
@@ -348,20 +358,36 @@
     [task resume];
 }
 
--(void)resolveAllSessionsForUser:(NSNumber *)userID
+-(void)resolveAllSessionsForUser:(NSNumber *)userID completion:(void (^)(void))completion
 {
     [self fetchUnresolvedSessionsForUser:userID completion:^(NSError *error, NSDictionary *sessions) {
         if (!error)
         {
+            __block int counter = (int)[[sessions objectForKey:@"sesions"] count];
+            
             for (NSDictionary *session in [sessions objectForKey:@"sessions"])
             {
-                [self markSessionResolved:[session objectForKey:@"id"]];
+                [self markSessionResolved:[session objectForKey:@"id"] completion:^{
+                    if (--counter == 0)
+                    {
+                        completion();
+                    }
+                }];
             }
+            
+            if (counter == 0)
+            {
+                completion();
+            }
+        }
+        else
+        {
+            completion();
         }
     }];
 }
 
--(void)markSessionResolved:(NSNumber *)session
+-(void)markSessionResolved:(NSNumber *)session completion:(void (^)(void))completion
 {
     NSData *putData = [@"{\"status\":\"resolved\"}" dataUsingEncoding:NSUTF8StringEncoding];
     

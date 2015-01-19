@@ -32,8 +32,8 @@
 
 -(void)fetchInformationForBuddy:(NSString *)buddyID completion:(void (^)(NSError *, NSDictionary *)) completion;
 
--(void)resolveAllSessionsForUser:(NSNumber *)userID;
+-(void)resolveAllSessionsForUser:(NSNumber *)userID completion:(void (^)(void))completion;
 
--(void)markSessionResolved:(NSNumber *)session;
+-(void)markSessionResolved:(NSNumber *)session completion:(void (^)(void))completion;
 
 @end

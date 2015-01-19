@@ -39,7 +39,7 @@ static NSString * const reuseIdentifier = @"BUDDY_ANNOTATION_REUSE_IDENTIFIER";
     [super viewDidLoad];
     // Do any additional setup after loading the view.
    
-    [_mapView setRegion:MKCoordinateRegionMakeWithDistance([_initialUserLocation coordinate], 400, 400) animated:YES];
+    [_mapView setRegion:MKCoordinateRegionMakeWithDistance([_initialUserLocation coordinate], 2000, 2000) animated:YES];
     [_mapView setShowsUserLocation:YES];
 }
 
@@ -65,6 +65,26 @@ static NSString * const reuseIdentifier = @"BUDDY_ANNOTATION_REUSE_IDENTIFIER";
     NSLog(@"Buddies: %@", buddies);
     
     NSLog(@"Location Data: %@", locations);
+    
+    NSArray *keySet = [buddies allKeys];
+    NSMutableArray *buddyAnnotations = [[NSMutableArray alloc] init];
+    
+    for (NSString *buddyID in keySet)
+    {
+        CLLocationCoordinate2D coord = CLLocationCoordinate2DMake([locations[buddyID][@"locations"][@"lat"] doubleValue], [locations[buddyID][@"locations"][@"lng"] doubleValue]);
+        NSString *subtitle = [@"Phone: " stringByAppendingString:buddies[buddyID][@"phone"]];
+        NSString *title = buddies[buddyID][@"name"];
+        BOCBuddy *buddy = [[BOCBuddy alloc] initWithCoordinate:coord title:title subtitle:subtitle];
+        [buddyAnnotations addObject:buddy];
+    }
+    
+    for (BOCBuddy *annotation in _mapView.annotations)
+    {
+        [_mapView removeAnnotation:annotation];
+    }
+    
+    [_mapView addAnnotations:buddyAnnotations];
+    NSLog(@"Annotations Added!");
 }
 
 #pragma mark - MKMapViewDelegate Methods
@@ -91,7 +111,6 @@ static NSString * const reuseIdentifier = @"BUDDY_ANNOTATION_REUSE_IDENTIFIER";
         {
             pinView = [pinView initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
         }
-        
         return pinView;
     }
     

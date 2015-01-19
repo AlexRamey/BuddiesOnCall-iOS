@@ -13,6 +13,7 @@
 		D08660341A6B2227008A7FDF /* BOCBuddyAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = D08660331A6B2227008A7FDF /* BOCBuddyAnnotationView.m */; };
 		D08660371A6B22C2008A7FDF /* BOCBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = D08660361A6B22C2008A7FDF /* BOCBuddy.m */; };
 		D086603A1A6B2F29008A7FDF /* BOCRefreshService.m in Sources */ = {isa = PBXBuildFile; fileRef = D08660391A6B2F29008A7FDF /* BOCRefreshService.m */; };
+		D086603E1A6CC8A6008A7FDF /* BOCButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D086603D1A6CC8A6008A7FDF /* BOCButton.m */; };
 		D0BC21DB1A62F52800C2D765 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BC21DA1A62F52800C2D765 /* main.m */; };
 		D0BC21DE1A62F52800C2D765 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BC21DD1A62F52800C2D765 /* AppDelegate.m */; };
 		D0BC21E41A62F52800C2D765 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D0BC21E21A62F52800C2D765 /* Main.storyboard */; };
@@ -47,6 +48,8 @@
 		D08660361A6B22C2008A7FDF /* BOCBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BOCBuddy.m; sourceTree = "<group>"; };
 		D08660381A6B2F29008A7FDF /* BOCRefreshService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BOCRefreshService.h; sourceTree = "<group>"; };
 		D08660391A6B2F29008A7FDF /* BOCRefreshService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BOCRefreshService.m; sourceTree = "<group>"; };
+		D086603C1A6CC8A6008A7FDF /* BOCButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BOCButton.h; sourceTree = "<group>"; };
+		D086603D1A6CC8A6008A7FDF /* BOCButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BOCButton.m; sourceTree = "<group>"; };
 		D0BC21D51A62F52800C2D765 /* Buddies On Call.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Buddies On Call.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0BC21D91A62F52800C2D765 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D0BC21DA1A62F52800C2D765 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -126,6 +129,8 @@
 			children = (
 				D08660381A6B2F29008A7FDF /* BOCRefreshService.h */,
 				D08660391A6B2F29008A7FDF /* BOCRefreshService.m */,
+				D086603C1A6CC8A6008A7FDF /* BOCButton.h */,
+				D086603D1A6CC8A6008A7FDF /* BOCButton.m */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -381,6 +386,7 @@
 				D0BC22061A62F68300C2D765 /* UIColor+Theme.m in Sources */,
 				D0BC21DE1A62F52800C2D765 /* AppDelegate.m in Sources */,
 				D08660341A6B2227008A7FDF /* BOCBuddyAnnotationView.m in Sources */,
+				D086603E1A6CC8A6008A7FDF /* BOCButton.m in Sources */,
 				D0BC21DB1A62F52800C2D765 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
