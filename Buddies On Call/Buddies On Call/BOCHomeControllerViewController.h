@@ -14,17 +14,14 @@
 @interface BOCHomeControllerViewController : UIViewController <CLLocationManagerDelegate, UIAlertViewDelegate>
 {
     CLLocation *recentLocation;
-    __block BOOL isSessionInProgress;
     __block BOOL sessionRequestInProgress;
-    __block BOOL isLoggedIn;
-    __block BOOL loginInProgress;    
-    
+    __block BOOL buddySessionRequestInProgress;
     int incomingLocationCounter;
     
     NSString *userName;
     NSString *compID;
     
-    __block BOOL buddySessionRequestInProgress;
+    
 }
 
 @property (nonatomic, strong) CLLocationManager *locationManager;

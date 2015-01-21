@@ -35,17 +35,9 @@
         [_locationManager setActivityType:CLActivityTypeFitness];
         [_locationManager requestAlwaysAuthorization];
         
-        isSessionInProgress = NO;
         sessionRequestInProgress = NO;
-        isLoggedIn = NO;
-        loginInProgress = NO;
-        
-        incomingLocationCounter = 0;
-        
-        userName = @"";
-        compID = @"";
-        
         buddySessionRequestInProgress = NO;
+        incomingLocationCounter = 0;
     }
     
     return self;
@@ -95,75 +87,37 @@
     
     NSNumber *userID = [[NSUserDefaults standardUserDefaults] objectForKey:BOC_USER_ID_KEY];
     
-    if ([userID intValue] == -1) //create new user object
+    if ([userID intValue] == -1)
     {
         createUser();
     }
-    else //verify that existing one is still good
+    else
     {
         [_httpClient verifyUserObjectID:userID completion:^(NSError *error)
          {
              if (error)
              {
-                 //Failed to verify user, therefore create a new one . . .
-                 NSLog(@"Failed to verify user");
                  createUser();
              }
              else
              {
-                 //current stored userID is good
-                 NSLog(@"User was verified");
-                 loginInProgress = NO;
-                 isLoggedIn = YES;
                  attemptStartSession();
              }
          }];
     }
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
--(void)dealloc
-{
-    [_locationManager stopUpdatingLocation]; //force quit scenario . . .
-    [_locationManager setDelegate:nil];
-    [[BOCRefreshService sharedService] setHomeController:nil];
-}
-
 -(IBAction)buddyUp:(id)sender
 {
-    /*
-    [_httpClient makeFakeSessionForUser:[[NSUserDefaults standardUserDefaults] objectForKey:BOC_USER_ID_KEY] location:@"370" completion:^(NSError *error, NSNumber *number) {
-        if (!error)
-        {
-            NSLog(@"Fake Number: %d", [number intValue]);
-        }
-        else
-        {
-            NSLog(@"Error: %@", error);
-        }
-    }];
-    */
+    [self setButtonsEnabled:NO];
+    
     void (^attemptStartSession)() = ^(){
-        if (isLoggedIn && !isSessionInProgress && !sessionRequestInProgress && !buddySessionRequestInProgress)
-        {
-            sessionRequestInProgress = YES;
-            [_locationManager startUpdatingLocation];
-        }
+        sessionRequestInProgress = YES;
+        [_locationManager startUpdatingLocation];
     };
     
-    if (!isLoggedIn && !loginInProgress)
-    {
-        loginInProgress = YES;
-        [self loginWithCompletion:attemptStartSession];
-    }
-    else
-    {
-        attemptStartSession();
-    }
+    [self loginWithCompletion:attemptStartSession];
+    
 }
 
 -(void)sessionResolved
@@ -174,28 +128,14 @@
     }
     
     [_locationManager stopUpdatingLocation];
-    
-    isSessionInProgress = NO;
-    _buddyUp.enabled = YES;
-    _buddyLogin.enabled = YES;
+    [self setButtonsEnabled:YES];
 }
 
 //BUDDY_CODE
 
 -(IBAction)buddyLogin:(id)sender
 {
-    if (loginInProgress || buddySessionRequestInProgress || sessionRequestInProgress) return;
-    
-    if (isLoggedIn)
-    {
-        buddySessionRequestInProgress = YES;
-        [_locationManager startUpdatingLocation];
-        return;
-    }
-    else
-    {
-        loginInProgress = YES;
-    }
+    [self setButtonsEnabled:NO];
     
     //new user
     void (^createUser)() = ^(){
@@ -213,21 +153,16 @@
     {
         createUser();
     }
-    else //verify that existing user is still good
+    else
     {
         [_httpClient verifyUserObjectID:userID completion:^(NSError *error)
          {
              if (error)
              {
-                 //Failed to verify user, therefore create a new one . . .
-                 NSLog(@"Failed to verify user");
                  createUser();
              }
              else
              {
-                 //current stored userID is good
-                 NSLog(@"User was verified");
-                 
                  //now check to verify that user is buddy
                  [_httpClient verifyBuddyObjectID:userID completion:^(NSError *error, NSNumber *buddyID) {
                      if (error)
@@ -235,17 +170,15 @@
                          dispatch_async(dispatch_get_main_queue(), ^{
                              UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Verified user object, but you're not a buddy!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
                              [alert show];
+                             [self setButtonsEnabled:YES];
                          });
                      }
                      else
                      {
-                         //current stored userID is good
                          [[NSUserDefaults standardUserDefaults] setObject:buddyID forKey:BOC_BUDDY_ID_KEY];
                          buddySessionRequestInProgress = YES;
                          [_locationManager startUpdatingLocation];
                      }
-                     isLoggedIn = YES;
-                     loginInProgress = NO;
                  }];
                  
              }
@@ -254,6 +187,28 @@
 }
 
 //END_BUDDY_CODE
+
+-(void)setButtonsEnabled:(BOOL)enabled
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        _buddyUp.enabled = enabled;
+        [_buddyUp setNeedsDisplay];
+        _buddyLogin.enabled = enabled;
+        [_buddyLogin setNeedsDisplay];
+    });
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+-(void)dealloc
+{
+    [_locationManager stopUpdatingLocation]; //force quit scenario . . .
+    [_locationManager setDelegate:nil];
+    [[BOCRefreshService sharedService] setHomeController:nil];
+}
 
 #pragma mark - UIAlertViewDelegate
 
@@ -267,14 +222,6 @@
     
     if (alertView.tag == 0) //buddy up!
     {
-        void (^attemptStartSession)() = ^(){
-            if (isLoggedIn && !isSessionInProgress && !sessionRequestInProgress)
-            {
-                sessionRequestInProgress = YES;
-                [_locationManager startUpdatingLocation];
-            }
-        };
-        
         [_httpClient createUserObjectWithName:userName email:[NSString stringWithFormat:@"%@@virginia.edu", compID] completion:^(NSError *error, NSNumber *userID)
          {
              if (error)
@@ -282,16 +229,15 @@
                  dispatch_async(dispatch_get_main_queue(), ^{
                      UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to create user object." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
                      [alert show];
+                     [self setButtonsEnabled:YES];
                  });
              }
              else
              {
                  [[NSUserDefaults standardUserDefaults] setObject:userID forKey:BOC_USER_ID_KEY];
-                 isLoggedIn = YES;
-                 attemptStartSession();
+                 sessionRequestInProgress = YES;
+                 [_locationManager startUpdatingLocation];
              }
-             
-             loginInProgress = NO;
          }];
     }
     else //buddy login . . .
@@ -308,14 +254,12 @@
              else
              {
                  [[NSUserDefaults standardUserDefaults] setObject:userID forKey:BOC_USER_ID_KEY];
-                 isLoggedIn = YES;
                  dispatch_async(dispatch_get_main_queue(), ^{
-                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Created user object, but you're not a buddy!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Created user, but you're not a buddy!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
                      [alert show];
                  });
              }
-             
-             loginInProgress = NO;
+             [self setButtonsEnabled:YES];
          }];
     }
 }
@@ -326,7 +270,7 @@
 {
     recentLocation = [locations objectAtIndex:([locations count]-1)];
     
-    if (incomingLocationCounter++ % 10 != 0)
+    if (!sessionRequestInProgress && !buddySessionRequestInProgress && incomingLocationCounter++ % 10 != 0)
     {
         return;
     }
@@ -339,33 +283,21 @@
         {
             if (buddySessionRequestInProgress)
             {
+                buddySessionRequestInProgress = NO;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    buddySessionRequestInProgress = NO;
-                    isSessionInProgress = YES;
-                    [_buddyLogin setEnabled:NO];
-                    [_buddyLogin setNeedsDisplay];
-                    [_buddyUp setEnabled:NO];
-                    [_buddyUp setNeedsDisplay];
                     [self performSegueWithIdentifier:@"HomeToBuddyMap" sender:self];
                 });
-                
             }
             
-            if (isSessionInProgress == NO && sessionRequestInProgress == YES)
+            if (sessionRequestInProgress)
             {
                 sessionRequestInProgress = NO;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    _buddyUp.enabled = NO;
-                    [_buddyUp setNeedsDisplay];
-                });
                 
-                [_httpClient openSessionForUser:userID location:[locationID stringValue] completion:^(NSError *error, NSNumber *sessionID)
+                [_httpClient openSessionForUser:userID location:[locationID stringValue] completion:^(NSError *error)
                  {
                      if (!error)
                      {
                          dispatch_async(dispatch_get_main_queue(), ^{
-                             isSessionInProgress = YES;
-                             [[NSUserDefaults standardUserDefaults] setObject:sessionID forKey:BOC_SESSION_ID_KEY];
                              [self performSegueWithIdentifier:@"HomeToUserMap" sender:self];
                          });
                      }
@@ -374,8 +306,8 @@
                          dispatch_async(dispatch_get_main_queue(), ^{
                              UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to start session, please try again." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
                              [alert show];
-                             _buddyUp.enabled = YES;
-                             [_buddyUp setNeedsDisplay];
+                             [_locationManager stopUpdatingLocation];
+                             [self setButtonsEnabled:YES];
                          });
                      }
                  }];
@@ -384,13 +316,15 @@
         else
         {
             //there's an error posting location
-            if ((isSessionInProgress == NO && sessionRequestInProgress == YES) || buddySessionRequestInProgress)
+            if (sessionRequestInProgress || buddySessionRequestInProgress)
             {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to post location. Try again to start session." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
                     [alert show];
+                    [_locationManager stopUpdatingLocation];
                     sessionRequestInProgress = NO;
                     buddySessionRequestInProgress = NO;
+                    [self setButtonsEnabled:YES];
                 });
             }
         }
@@ -399,18 +333,27 @@
 
 -(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-    NSLog(@"ERROR: %@", error);
-    if ([[error domain] caseInsensitiveCompare:kCLErrorDomain] == NSOrderedSame)
+    if ([[error domain] caseInsensitiveCompare:kCLErrorDomain] == NSOrderedSame && [error code] == kCLErrorDenied)
     {
-        if ([error code] == kCLErrorDenied)
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Denied." message:@"Enable Location Services for this app in your device settings" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        if (sessionRequestInProgress || buddySessionRequestInProgress)
         {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Denied." message:@"Enable Location Services for this app in your device settings" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-            [alert show];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to get location. Try again to start session." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                [alert show];
+                sessionRequestInProgress = NO;
+                buddySessionRequestInProgress = NO;
+                [self setButtonsEnabled:YES];
+            });
         }
     }
     
-    sessionRequestInProgress = NO;
-    buddySessionRequestInProgress = NO;
+    [_locationManager stopUpdatingLocation];
 }
 
 -(void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status

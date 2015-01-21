@@ -159,7 +159,7 @@
     [task resume];
 }
 
--(void)openSessionForUser:(NSNumber *)userID location:(NSString *)locationID completion:(void (^)(NSError *, NSNumber *)) completion
+-(void)openSessionForUser:(NSNumber *)userID location:(NSString *)locationID completion:(void (^)(NSError *)) completion
 {
     NSData *postData = [[NSString stringWithFormat:@"{\"userid\":\"%@\",\"status\":\"open\",\"firstlocationid\":\"%@\"}", [userID stringValue], locationID] dataUsingEncoding:NSUTF8StringEncoding];
     
@@ -171,7 +171,7 @@
         if (error)
         {
             NSLog(@"Error: %@", error);
-            completion(error, nil);
+            completion(error);
         }
         else
         {
@@ -183,16 +183,16 @@
             
             if (parseError)
             {
-                completion(parseError, nil);
+                completion(parseError);
             }
             else if (![json objectForKey:@"added"])
             {
                 NSError *sessionNotAdded = [[NSError alloc] initWithDomain:@"SESSION_NOT_ADDED" code:500 userInfo:nil];
-                completion(sessionNotAdded, nil);
+                completion(sessionNotAdded);
             }
             else
             {
-                completion(nil,[json objectForKey:@"added"]);
+                completion(nil);
             }
         }
     }];
