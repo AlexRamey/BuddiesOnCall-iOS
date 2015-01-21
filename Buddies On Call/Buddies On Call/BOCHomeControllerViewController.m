@@ -48,29 +48,26 @@
     // Do any additional setup after loading the view.
     [_buddyUp setTitleColor:[UIColor UVAWhite] forState:UIControlStateNormal];
     [_buddyUp setTitle:@"Buddy Up!" forState:UIControlStateNormal];
-    _buddyUp.enabled = NO;
+    [_buddyUp setTitle:@"Working . . ." forState:UIControlStateDisabled];
     
     [_buddyLogin setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_buddyLogin setTitle:@"Buddy Login" forState:UIControlStateNormal];
-    [_buddyLogin setTitle:@"Sesion Active" forState:UIControlStateDisabled];
-    _buddyLogin.enabled = YES;
+    [_buddyLogin setTitle:@"Working . . ." forState:UIControlStateDisabled];
     
     //Resolve Any Previously Initiated Sessions that are lingering . . .
     NSNumber *userID = [[NSUserDefaults standardUserDefaults] objectForKey:BOC_USER_ID_KEY];
     
-    if ([userID intValue] != -1) //old user . . .
+    if ([userID intValue] != -1) // not new user
     {
+        _buddyUp.enabled = NO;
+        _buddyLogin.enabled = NO;
+        
         //Don't let the app delete a session that gets started right after button press
         [[BOCHTTPClient sharedClient] resolveAllSessionsForUser:userID completion:^{
             dispatch_async(dispatch_get_main_queue(), ^{
-                _buddyUp.enabled = YES;
-                [_buddyUp setTitle:@"Session Active" forState:UIControlStateDisabled];
+                [self setButtonsEnabled:YES];
             });
         }];
-    }
-    else //new user
-    {
-        _buddyUp.enabled = YES;
     }
 }
 
@@ -119,19 +116,6 @@
     [self loginWithCompletion:attemptStartSession];
     
 }
-
--(void)sessionResolved
-{
-    if (self.presentedViewController)
-    {
-        [self dismissViewControllerAnimated:YES completion:nil];
-    }
-    
-    [_locationManager stopUpdatingLocation];
-    [self setButtonsEnabled:YES];
-}
-
-//BUDDY_CODE
 
 -(IBAction)buddyLogin:(id)sender
 {
@@ -186,8 +170,6 @@
     }
 }
 
-//END_BUDDY_CODE
-
 -(void)setButtonsEnabled:(BOOL)enabled
 {
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -196,6 +178,19 @@
         _buddyLogin.enabled = enabled;
         [_buddyLogin setNeedsDisplay];
     });
+}
+
+-(void)sessionResolved
+{
+    if (self.presentedViewController)
+    {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+    
+    [_locationManager stopUpdatingLocation];
+    [_buddyLogin setTitle:@"Working . . ." forState:UIControlStateDisabled];
+    [_buddyUp setTitle:@"Working . . ." forState:UIControlStateDisabled];
+    [self setButtonsEnabled:YES];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -285,6 +280,10 @@
             {
                 buddySessionRequestInProgress = NO;
                 dispatch_async(dispatch_get_main_queue(), ^{
+                    [_buddyLogin setTitle:@"Session Active" forState:UIControlStateDisabled];
+                    [_buddyLogin setNeedsDisplay];
+                    [_buddyUp setTitle:@"Session Active" forState:UIControlStateDisabled];
+                    [_buddyUp setNeedsDisplay];
                     [self performSegueWithIdentifier:@"HomeToBuddyMap" sender:self];
                 });
             }
@@ -298,6 +297,10 @@
                      if (!error)
                      {
                          dispatch_async(dispatch_get_main_queue(), ^{
+                             [_buddyLogin setTitle:@"Session Active" forState:UIControlStateDisabled];
+                             [_buddyLogin setNeedsDisplay];
+                             [_buddyUp setTitle:@"Session Active" forState:UIControlStateDisabled];
+                             [_buddyUp setNeedsDisplay];
                              [self performSegueWithIdentifier:@"HomeToUserMap" sender:self];
                          });
                      }
