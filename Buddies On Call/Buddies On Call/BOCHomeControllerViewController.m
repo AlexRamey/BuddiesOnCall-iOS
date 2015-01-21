@@ -209,6 +209,8 @@
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    [alertView resignFirstResponder];
+    
     if (buttonIndex == 1)
     {
         userName = [alertView textFieldAtIndex:0].text;
@@ -398,8 +400,6 @@
         BOCBuddyMapViewController *vc = (BOCBuddyMapViewController *)[segue destinationViewController];
         
         [vc setInitialUserLocation:recentLocation];
-        
-        
     }
 }
 

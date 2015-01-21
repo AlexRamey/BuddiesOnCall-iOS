@@ -73,6 +73,9 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="buddyLogin:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="vSR-2d-mjT"/>
+                                </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fzK-9v-Pa8">
                                 <rect key="frame" x="0.0" y="543" width="600" height="1"/>
@@ -94,7 +97,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="buddyLogin" destination="HTE-vj-Rgr" id="zfN-dL-e6V"/>
+                        <outlet property="buddyLogin" destination="HTE-vj-Rgr" id="2XN-19-HQg"/>
                         <outlet property="buddyUp" destination="adr-bP-LOI" id="nRm-Ql-HAO"/>
                         <segue destination="uAZ-rP-uhy" kind="presentation" identifier="HomeToUserMap" id="8aZ-lE-hB6"/>
                         <segue destination="ABT-Lg-Rhr" kind="presentation" identifier="HomeToBuddyMap" id="NAx-pp-QA8"/>
