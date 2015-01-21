@@ -19,6 +19,8 @@ NSString * const BOC_IS_FIRST_LAUNCH_KEY = @"BOC_IS_FIRST_LAUNCH_KEY";
 
 NSString * const BOC_USER_ID_KEY = @"BOC_USER_ID_KEY";
 
+NSString * const BOC_BUDDY_ID_KEY = @"BOC_BUDDY_ID_KEY";
+
 NSString * const BOC_SESSION_ID_KEY = @"BOC_SESSION_ID_KEY";
 
 +(void)initialize
@@ -31,6 +33,7 @@ NSString * const BOC_SESSION_ID_KEY = @"BOC_SESSION_ID_KEY";
     NSDictionary *defaults = @{
                                BOC_IS_FIRST_LAUNCH_KEY : @YES,
                                BOC_USER_ID_KEY : [NSNumber numberWithInt:-1],
+                               BOC_BUDDY_ID_KEY : [NSNumber numberWithInt:-1],
                                BOC_SESSION_ID_KEY : [NSNumber numberWithInt:-1]
                                };
     

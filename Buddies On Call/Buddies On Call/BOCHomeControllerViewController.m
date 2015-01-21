@@ -8,6 +8,7 @@
 
 #import "BOCHomeControllerViewController.h"
 #import "BOCMapViewController.h"
+#import "BOCBuddyMapViewController.h"
 #import "AppDelegate.h"
 #import "UIColor+Theme.h"
 
@@ -40,6 +41,11 @@
         loginInProgress = NO;
         
         incomingLocationCounter = 0;
+        
+        userName = @"";
+        compID = @"";
+        
+        buddySessionRequestInProgress = NO;
     }
     
     return self;
@@ -52,10 +58,15 @@
     [_buddyUp setTitle:@"Buddy Up!" forState:UIControlStateNormal];
     _buddyUp.enabled = NO;
     
+    [_buddyLogin setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [_buddyLogin setTitle:@"Buddy Login" forState:UIControlStateNormal];
+    [_buddyLogin setTitle:@"Sesion Active" forState:UIControlStateDisabled];
+    _buddyLogin.enabled = YES;
+    
     //Resolve Any Previously Initiated Sessions that are lingering . . .
     NSNumber *userID = [[NSUserDefaults standardUserDefaults] objectForKey:BOC_USER_ID_KEY];
     
-    if ([userID intValue] != 0)
+    if ([userID intValue] != -1) //old user . . .
     {
         //Don't let the app delete a session that gets started right after button press
         [[BOCHTTPClient sharedClient] resolveAllSessionsForUser:userID completion:^{
@@ -65,32 +76,21 @@
             });
         }];
     }
+    else //new user
+    {
+        _buddyUp.enabled = YES;
+    }
 }
 
 -(void)loginWithCompletion:(void (^)(void))attemptStartSession
 {
-    loginInProgress = YES;
-    
     void (^createUser)() = ^(){
-        NSLog(@"Create User");
-        [_httpClient createUserObjectWithName:@"iOS Test" email:@"" completion:^(NSError *error, NSNumber *userID)
-         {
-             if (error)
-             {
-                 dispatch_async(dispatch_get_main_queue(), ^{
-                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to fetch user object" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-                     [alert show];
-                 });
-             }
-             else
-             {
-                 [[NSUserDefaults standardUserDefaults] setObject:userID forKey:BOC_USER_ID_KEY];
-                 isLoggedIn = YES;
-                 attemptStartSession();
-             }
-             
-             loginInProgress = NO;
-         }];
+        UIAlertView *credentials = [[UIAlertView alloc] initWithTitle:@"Provide Info" message:@"Optionally provide your Name and Computing ID" delegate:self cancelButtonTitle:@"Skip" otherButtonTitles:@"Submit", nil];
+        credentials.alertViewStyle = UIAlertViewStyleLoginAndPasswordInput;
+        [credentials textFieldAtIndex:0].placeholder = @"Name";
+        [credentials textFieldAtIndex:1].placeholder = @"Computing ID";
+        credentials.tag = 0;
+        [credentials show];
     };
     
     NSNumber *userID = [[NSUserDefaults standardUserDefaults] objectForKey:BOC_USER_ID_KEY];
@@ -128,6 +128,7 @@
 
 -(void)dealloc
 {
+    [_locationManager stopUpdatingLocation]; //force quit scenario . . .
     [_locationManager setDelegate:nil];
     [[BOCRefreshService sharedService] setHomeController:nil];
 }
@@ -147,7 +148,7 @@
     }];
     */
     void (^attemptStartSession)() = ^(){
-        if (isLoggedIn && !isSessionInProgress && !sessionRequestInProgress)
+        if (isLoggedIn && !isSessionInProgress && !sessionRequestInProgress && !buddySessionRequestInProgress)
         {
             sessionRequestInProgress = YES;
             [_locationManager startUpdatingLocation];
@@ -156,6 +157,7 @@
     
     if (!isLoggedIn && !loginInProgress)
     {
+        loginInProgress = YES;
         [self loginWithCompletion:attemptStartSession];
     }
     else
@@ -171,8 +173,151 @@
         [self dismissViewControllerAnimated:YES completion:nil];
     }
     
+    [_locationManager stopUpdatingLocation];
+    
     isSessionInProgress = NO;
     _buddyUp.enabled = YES;
+    _buddyLogin.enabled = YES;
+}
+
+//BUDDY_CODE
+
+-(IBAction)buddyLogin:(id)sender
+{
+    if (loginInProgress || buddySessionRequestInProgress || sessionRequestInProgress) return;
+    
+    if (isLoggedIn)
+    {
+        buddySessionRequestInProgress = YES;
+        [_locationManager startUpdatingLocation];
+        return;
+    }
+    else
+    {
+        loginInProgress = YES;
+    }
+    
+    //new user
+    void (^createUser)() = ^(){
+        UIAlertView *credentials = [[UIAlertView alloc] initWithTitle:@"Provide Info" message:@"Optionally provide your Name and Computing ID" delegate:self cancelButtonTitle:@"Skip" otherButtonTitles:@"Submit", nil];
+        credentials.alertViewStyle = UIAlertViewStyleLoginAndPasswordInput;
+        [credentials textFieldAtIndex:0].placeholder = @"Name";
+        [credentials textFieldAtIndex:1].placeholder = @"Computing ID";
+        credentials.tag = 1;
+        [credentials show];
+    };
+    
+    NSNumber *userID = [[NSUserDefaults standardUserDefaults] objectForKey:BOC_USER_ID_KEY];
+    
+    if ([userID intValue] == -1)
+    {
+        createUser();
+    }
+    else //verify that existing user is still good
+    {
+        [_httpClient verifyUserObjectID:userID completion:^(NSError *error)
+         {
+             if (error)
+             {
+                 //Failed to verify user, therefore create a new one . . .
+                 NSLog(@"Failed to verify user");
+                 createUser();
+             }
+             else
+             {
+                 //current stored userID is good
+                 NSLog(@"User was verified");
+                 
+                 //now check to verify that user is buddy
+                 [_httpClient verifyBuddyObjectID:userID completion:^(NSError *error, NSNumber *buddyID) {
+                     if (error)
+                     {
+                         dispatch_async(dispatch_get_main_queue(), ^{
+                             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Verified user object, but you're not a buddy!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                             [alert show];
+                         });
+                     }
+                     else
+                     {
+                         //current stored userID is good
+                         [[NSUserDefaults standardUserDefaults] setObject:buddyID forKey:BOC_BUDDY_ID_KEY];
+                         buddySessionRequestInProgress = YES;
+                         [_locationManager startUpdatingLocation];
+                     }
+                     isLoggedIn = YES;
+                     loginInProgress = NO;
+                 }];
+                 
+             }
+         }];
+    }
+}
+
+//END_BUDDY_CODE
+
+#pragma mark - UIAlertViewDelegate
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1)
+    {
+        userName = [alertView textFieldAtIndex:0].text;
+        compID = [alertView textFieldAtIndex:1].text;
+    }
+    
+    if (alertView.tag == 0) //buddy up!
+    {
+        void (^attemptStartSession)() = ^(){
+            if (isLoggedIn && !isSessionInProgress && !sessionRequestInProgress)
+            {
+                sessionRequestInProgress = YES;
+                [_locationManager startUpdatingLocation];
+            }
+        };
+        
+        [_httpClient createUserObjectWithName:userName email:[NSString stringWithFormat:@"%@@virginia.edu", compID] completion:^(NSError *error, NSNumber *userID)
+         {
+             if (error)
+             {
+                 dispatch_async(dispatch_get_main_queue(), ^{
+                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to create user object." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                     [alert show];
+                 });
+             }
+             else
+             {
+                 [[NSUserDefaults standardUserDefaults] setObject:userID forKey:BOC_USER_ID_KEY];
+                 isLoggedIn = YES;
+                 attemptStartSession();
+             }
+             
+             loginInProgress = NO;
+         }];
+    }
+    else //buddy login . . .
+    {
+        [_httpClient createUserObjectWithName:userName email:[NSString stringWithFormat:@"%@@virginia.edu", compID] completion:^(NSError *error, NSNumber *userID)
+         {
+             if (error)
+             {
+                 dispatch_async(dispatch_get_main_queue(), ^{
+                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to create user object" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                     [alert show];
+                 });
+             }
+             else
+             {
+                 [[NSUserDefaults standardUserDefaults] setObject:userID forKey:BOC_USER_ID_KEY];
+                 isLoggedIn = YES;
+                 dispatch_async(dispatch_get_main_queue(), ^{
+                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Created user object, but you're not a buddy!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                     [alert show];
+                 });
+             }
+             
+             loginInProgress = NO;
+         }];
+    }
 }
 
 #pragma mark - CLLocationManagerDelegate Methods
@@ -192,6 +337,20 @@
     {
         if (!error)
         {
+            if (buddySessionRequestInProgress)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    buddySessionRequestInProgress = NO;
+                    isSessionInProgress = YES;
+                    [_buddyLogin setEnabled:NO];
+                    [_buddyLogin setNeedsDisplay];
+                    [_buddyUp setEnabled:NO];
+                    [_buddyUp setNeedsDisplay];
+                    [self performSegueWithIdentifier:@"HomeToBuddyMap" sender:self];
+                });
+                
+            }
+            
             if (isSessionInProgress == NO && sessionRequestInProgress == YES)
             {
                 sessionRequestInProgress = NO;
@@ -207,8 +366,6 @@
                          dispatch_async(dispatch_get_main_queue(), ^{
                              isSessionInProgress = YES;
                              [[NSUserDefaults standardUserDefaults] setObject:sessionID forKey:BOC_SESSION_ID_KEY];
-                             _buddyUp.enabled = NO;
-                             [_buddyUp setNeedsDisplay];
                              [self performSegueWithIdentifier:@"HomeToUserMap" sender:self];
                          });
                      }
@@ -222,6 +379,19 @@
                          });
                      }
                  }];
+            }
+        }
+        else
+        {
+            //there's an error posting location
+            if ((isSessionInProgress == NO && sessionRequestInProgress == YES) || buddySessionRequestInProgress)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to post location. Try again to start session." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                    [alert show];
+                    sessionRequestInProgress = NO;
+                    buddySessionRequestInProgress = NO;
+                });
             }
         }
     }];
@@ -238,6 +408,9 @@
             [alert show];
         }
     }
+    
+    sessionRequestInProgress = NO;
+    buddySessionRequestInProgress = NO;
 }
 
 -(void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
@@ -273,6 +446,14 @@
         [vc setInitialUserLocation:recentLocation];
         
         [[BOCRefreshService sharedService] start];
+    }
+    else if ([[segue destinationViewController] class] == [BOCBuddyMapViewController class])
+    {
+        BOCBuddyMapViewController *vc = (BOCBuddyMapViewController *)[segue destinationViewController];
+        
+        [vc setInitialUserLocation:recentLocation];
+        
+        
     }
 }
 

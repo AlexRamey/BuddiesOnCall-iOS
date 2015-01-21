@@ -270,6 +270,11 @@
             {
                 completion(parseError, nil);
             }
+            else if ([[json objectForKey:@"status"] intValue] == 500)
+            {
+                NSError *error = [[NSError alloc] init];
+                completion(error, nil);
+            }
             else
             {
                 completion(nil, json);
@@ -397,6 +402,59 @@
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
     NSURLSessionDataTask *task = [_session dataTaskWithRequest:request];
+    
+    [task resume];
+}
+
+-(void)verifyBuddyObjectID:(NSNumber *)userID completion:(void (^)(NSError *, NSNumber *))completion
+{
+    NSString *url = [@"http://boffo-server.bitnamiapp.com:5000/buddies" stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    request.HTTPMethod = @"GET";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    NSURLSessionDataTask *task = [_session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) //either request went wrong or there isn't a user with this id
+        {
+            NSLog(@"Error: %@", error);
+            completion(error, nil);
+        }
+        else
+        {
+            NSError *parseError = nil;
+            
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&parseError];
+            NSLog(@"Buddies JSON: %@", json);
+            if (parseError)
+            {
+                completion(parseError, nil);
+            }
+            else
+            {
+                NSError *buddyNotFound = [[NSError alloc] initWithDomain:@"USER_NOT_FOUND" code:500 userInfo:nil];
+                
+                if ([[json objectForKey:@"status"] intValue] == 500)
+                {
+                    completion(buddyNotFound, nil);
+                }
+                else
+                {
+                    NSArray *buddies = [json objectForKey:@"buddies"];
+                    for (NSDictionary *buddy in buddies)
+                    {
+                        if ([[buddy objectForKey:@"userid"] intValue] == [userID intValue])
+                        {
+                            //found!!!
+                            
+                            completion(nil, [buddy objectForKey:@"id"]);
+                            return;
+                        }
+                    }
+                    completion(buddyNotFound, nil);
+                }
+            }
+            
+        }
+    }];
     
     [task resume];
 }

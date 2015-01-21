@@ -11,20 +11,31 @@
 #import "BOCHTTPClient.h"
 #import "BOCRefreshService.h"
 
-@interface BOCHomeControllerViewController : UIViewController <CLLocationManagerDelegate>
+@interface BOCHomeControllerViewController : UIViewController <CLLocationManagerDelegate, UIAlertViewDelegate>
 {
     CLLocation *recentLocation;
     __block BOOL isSessionInProgress;
     __block BOOL sessionRequestInProgress;
     __block BOOL isLoggedIn;
-    __block BOOL loginInProgress;
+    __block BOOL loginInProgress;    
     
     int incomingLocationCounter;
+    
+    NSString *userName;
+    NSString *compID;
+    
+    __block BOOL buddySessionRequestInProgress;
 }
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) BOCHTTPClient *httpClient;
-@property (nonatomic, strong) IBOutlet UIButton *buddyUp;
+
+@property (nonatomic, weak) IBOutlet UIButton *buddyUp;
+
+//Buddy Code
+@property (nonatomic, weak) IBOutlet UIButton *buddyLogin;
+
+//End Buddy Code
 
 -(void)sessionResolved;
 

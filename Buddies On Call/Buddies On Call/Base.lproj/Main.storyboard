@@ -5,6 +5,36 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
+        <!--Buddy Map View Controller-->
+        <scene sceneID="F59-PP-XsW">
+            <objects>
+                <viewController id="ABT-Lg-Rhr" customClass="BOCBuddyMapViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="NRv-1n-N8b"/>
+                        <viewControllerLayoutGuide type="bottom" id="26M-vL-4U7"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="XNo-33-Qe0">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" showsUserLocation="YES" showsBuildings="NO" showsPointsOfInterest="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oZc-1d-F5e"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ysU-Kv-5XF" customClass="BOCButton">
+                                <rect key="frame" x="378" y="550" width="116" height="30"/>
+                                <state key="normal" title="Action Button">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="mapView" destination="oZc-1d-F5e" id="4Zw-qT-eC7"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7N0-yC-LQw" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="659" y="881"/>
+        </scene>
         <!--Home Controller View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
@@ -32,16 +62,42 @@
                                     <action selector="buddyUp:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="2Rs-fd-0UR"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HTE-vj-Rgr" customClass="BOCButton">
+                                <rect key="frame" x="175" y="552" width="250" height="40"/>
+                                <color key="backgroundColor" red="0.05930543907" green="0.1859394077" blue="0.61768574620000005" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="8Ln-mr-86h"/>
+                                    <constraint firstAttribute="width" constant="250" id="ma9-bF-k0g"/>
+                                </constraints>
+                                <state key="normal">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fzK-9v-Pa8">
+                                <rect key="frame" x="0.0" y="543" width="600" height="1"/>
+                                <color key="backgroundColor" red="0.69803921568627447" green="0.69803921568627447" blue="0.70196078431372544" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="1" id="giw-By-8gc"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="HTE-vj-Rgr" firstAttribute="top" secondItem="fzK-9v-Pa8" secondAttribute="bottom" constant="8" id="3dm-lY-cJ1"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="HTE-vj-Rgr" secondAttribute="bottom" constant="8" id="IuK-SI-dP7"/>
                             <constraint firstAttribute="centerY" secondItem="adr-bP-LOI" secondAttribute="centerY" id="Ntb-jp-wDn"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="fzK-9v-Pa8" secondAttribute="trailing" constant="-16" id="i0V-Zr-AjP"/>
                             <constraint firstAttribute="centerX" secondItem="adr-bP-LOI" secondAttribute="centerX" id="iYv-w2-R0X"/>
+                            <constraint firstAttribute="centerX" secondItem="HTE-vj-Rgr" secondAttribute="centerX" id="mj3-yI-T8A"/>
+                            <constraint firstItem="fzK-9v-Pa8" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="-16" id="nUJ-0R-e2O"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="buddyLogin" destination="HTE-vj-Rgr" id="zfN-dL-e6V"/>
                         <outlet property="buddyUp" destination="adr-bP-LOI" id="nRm-Ql-HAO"/>
                         <segue destination="uAZ-rP-uhy" kind="presentation" identifier="HomeToUserMap" id="8aZ-lE-hB6"/>
+                        <segue destination="ABT-Lg-Rhr" kind="presentation" identifier="HomeToBuddyMap" id="NAx-pp-QA8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>

@@ -36,4 +36,7 @@
 
 -(void)markSessionResolved:(NSNumber *)session completion:(void (^)(void))completion;
 
+//Buddy Methods
+-(void)verifyBuddyObjectID:(NSNumber *)userID completion:(void (^)(NSError *, NSNumber *))completion;
+
 @end
