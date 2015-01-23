@@ -8,6 +8,7 @@
 
 #import "BOCRefreshService.h"
 #import "AppDelegate.h"
+#import "BOCHTTPClient.h"
 #import "BOCMapViewController.h"
 #import "BOCHomeControllerViewController.h"
 

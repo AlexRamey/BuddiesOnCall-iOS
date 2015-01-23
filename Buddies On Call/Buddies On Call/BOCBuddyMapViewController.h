@@ -13,6 +13,7 @@
 
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
 @property (nonatomic, weak) IBOutlet UIButton *actionButton;
+@property (nonatomic, weak) IBOutlet UIButton *missionFailed;
 @property (nonatomic, strong) CLLocation *initialUserLocation;
 
 @end

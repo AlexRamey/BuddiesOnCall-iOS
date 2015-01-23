@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
-#import "BOCHTTPClient.h"
-#import "BOCRefreshService.h"
+
+@class BOCHTTPClient;
 
 @interface BOCHomeControllerViewController : UIViewController <CLLocationManagerDelegate, UIAlertViewDelegate>
 {

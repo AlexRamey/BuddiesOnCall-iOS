@@ -7,6 +7,7 @@
 //
 
 #import "BOCBuddyMapViewController.h"
+#import "BOCBuddyRefreshService.h"
 
 @interface BOCBuddyMapViewController ()
 
@@ -14,14 +15,49 @@
 
 @implementation BOCBuddyMapViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
+-(id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    
+    if (self)
+    {
+        //custom initialization
+        [[BOCBuddyRefreshService sharedService] setMapController:self];
+    }
+    
+    return self;
 }
 
-- (void)didReceiveMemoryWarning {
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Alert!" message:@"You are on call!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+    [alert show];
+}
+
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(IBAction)actionButtonPressed:(id)sender
+{
+    //update session . . .
+}
+
+-(IBAction)missionFailedButtonPressed:(id)sender
+{
+    //Mark Session Failed
+    
+    //Take Buddy Off Call
+}
+
+-(void)dealloc
+{
+    [[BOCBuddyRefreshService sharedService] setMapController:nil];
 }
 
 /*

@@ -1,27 +1,28 @@
 //
-//  BOCRefreshService.h
+//  BOCBuddyRefreshService.h
 //  Buddies On Call
 //
-//  Created by Alex Ramey on 1/17/15.
+//  Created by Alex Ramey on 1/23/15.
 //  Copyright (c) 2015 HooApps. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
-@class BOCMapViewController, BOCHomeControllerViewController, BOCHTTPClient;
+@class BOCBuddyMapViewController, BOCHomeControllerViewController, BOCHTTPClient;
 
-@interface BOCRefreshService : NSObject
+@interface BOCBuddyRefreshService : NSObject
 {
     __block BOOL inProgress;
+    __block BOOL isOnCall;
 }
 
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) BOCHTTPClient *httpClient;
 
-@property (nonatomic, weak) BOCMapViewController *mapController;
+@property (nonatomic, weak) BOCBuddyMapViewController *mapController;
 @property (nonatomic, weak) BOCHomeControllerViewController *homeController;
 
-+(BOCRefreshService *)sharedService;
++(BOCBuddyRefreshService *)sharedService;
 
 -(void)start;
 

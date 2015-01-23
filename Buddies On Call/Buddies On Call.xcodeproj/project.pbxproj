@@ -15,6 +15,7 @@
 		D086603A1A6B2F29008A7FDF /* BOCRefreshService.m in Sources */ = {isa = PBXBuildFile; fileRef = D08660391A6B2F29008A7FDF /* BOCRefreshService.m */; };
 		D086603E1A6CC8A6008A7FDF /* BOCButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D086603D1A6CC8A6008A7FDF /* BOCButton.m */; };
 		D08660411A703803008A7FDF /* BOCBuddyMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D08660401A703803008A7FDF /* BOCBuddyMapViewController.m */; };
+		D08660441A72DD5C008A7FDF /* BOCBuddyRefreshService.m in Sources */ = {isa = PBXBuildFile; fileRef = D08660431A72DD5C008A7FDF /* BOCBuddyRefreshService.m */; };
 		D0BC21DB1A62F52800C2D765 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BC21DA1A62F52800C2D765 /* main.m */; };
 		D0BC21DE1A62F52800C2D765 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BC21DD1A62F52800C2D765 /* AppDelegate.m */; };
 		D0BC21E41A62F52800C2D765 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D0BC21E21A62F52800C2D765 /* Main.storyboard */; };
@@ -53,6 +54,8 @@
 		D086603D1A6CC8A6008A7FDF /* BOCButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BOCButton.m; sourceTree = "<group>"; };
 		D086603F1A703803008A7FDF /* BOCBuddyMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BOCBuddyMapViewController.h; sourceTree = "<group>"; };
 		D08660401A703803008A7FDF /* BOCBuddyMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BOCBuddyMapViewController.m; sourceTree = "<group>"; };
+		D08660421A72DD5C008A7FDF /* BOCBuddyRefreshService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BOCBuddyRefreshService.h; sourceTree = "<group>"; };
+		D08660431A72DD5C008A7FDF /* BOCBuddyRefreshService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BOCBuddyRefreshService.m; sourceTree = "<group>"; };
 		D0BC21D51A62F52800C2D765 /* Buddies On Call.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Buddies On Call.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0BC21D91A62F52800C2D765 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D0BC21DA1A62F52800C2D765 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -132,6 +135,8 @@
 		D086603B1A6B2F2C008A7FDF /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				D08660421A72DD5C008A7FDF /* BOCBuddyRefreshService.h */,
+				D08660431A72DD5C008A7FDF /* BOCBuddyRefreshService.m */,
 				D08660381A6B2F29008A7FDF /* BOCRefreshService.h */,
 				D08660391A6B2F29008A7FDF /* BOCRefreshService.m */,
 				D086603C1A6CC8A6008A7FDF /* BOCButton.h */,
@@ -394,6 +399,7 @@
 				D08660341A6B2227008A7FDF /* BOCBuddyAnnotationView.m in Sources */,
 				D086603E1A6CC8A6008A7FDF /* BOCButton.m in Sources */,
 				D0BC21DB1A62F52800C2D765 /* main.m in Sources */,
+				D08660441A72DD5C008A7FDF /* BOCBuddyRefreshService.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -459,4 +459,54 @@
     [task resume];
 }
 
+-(void)setBuddyWithID:(NSNumber *)buddyID onCall:(BOOL)onCall completion:(void (^)(NSError *))completion
+{
+    int onCallValue = 0;
+    
+    if (onCall)
+    {
+        onCallValue = 1;
+    }
+    
+    NSData *putData = [[NSString stringWithFormat:@"{\"oncall\":\"%d\"}", onCallValue] dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://boffo-server.bitnamiapp.com:5000/buddies/%d", [buddyID intValue]]]];
+    request.HTTPBody = putData;
+    request.HTTPMethod = @"PUT";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    
+    NSURLSessionDataTask *task = [_session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+        
+        if (error) //either request went wrong or there isn't a user with this id
+        {
+            NSLog(@"Error: %@", error);
+            completion(error);
+        }
+        else
+        {
+            NSError *parseError = nil;
+            
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&parseError];
+            NSLog(@"PUT BUDDY JSON: %@", json);
+            
+            if (parseError)
+            {
+                completion(parseError);
+            }
+            else if ([[json objectForKey:@"status"] intValue] == 500)
+            {
+                NSError *error = [[NSError alloc] init];
+                completion(error);
+            }
+            else
+            {
+                completion(nil);
+            }
+        }
+        
+    }];
+    
+    [task resume];
+}
+
 @end

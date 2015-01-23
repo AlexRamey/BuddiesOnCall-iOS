@@ -39,4 +39,6 @@
 //Buddy Methods
 -(void)verifyBuddyObjectID:(NSNumber *)userID completion:(void (^)(NSError *, NSNumber *))completion;
 
+-(void)setBuddyWithID:(NSNumber *)buddyID onCall:(BOOL)onCall completion:(void (^)(NSError *))completion;
+
 @end

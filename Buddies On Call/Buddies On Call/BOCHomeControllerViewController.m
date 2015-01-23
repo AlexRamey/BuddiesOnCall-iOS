@@ -9,6 +9,9 @@
 #import "BOCHomeControllerViewController.h"
 #import "BOCMapViewController.h"
 #import "BOCBuddyMapViewController.h"
+#import "BOCHTTPClient.h"
+#import "BOCRefreshService.h"
+#import "BOCBuddyRefreshService.h"
 #import "AppDelegate.h"
 #import "UIColor+Theme.h"
 
@@ -27,6 +30,7 @@
         _httpClient = [BOCHTTPClient sharedClient];
         
         [[BOCRefreshService sharedService] setHomeController:self];
+        [[BOCBuddyRefreshService sharedService] setHomeController:self];
         
         _locationManager = [[CLLocationManager alloc] init];
         [_locationManager setDelegate:self];
@@ -203,6 +207,7 @@
     [_locationManager stopUpdatingLocation]; //force quit scenario . . .
     [_locationManager setDelegate:nil];
     [[BOCRefreshService sharedService] setHomeController:nil];
+    [[BOCBuddyRefreshService sharedService] setHomeController:nil];
 }
 
 #pragma mark - UIAlertViewDelegate
@@ -286,8 +291,28 @@
                     [_buddyLogin setNeedsDisplay];
                     [_buddyUp setTitle:@"Session Active" forState:UIControlStateDisabled];
                     [_buddyUp setNeedsDisplay];
-                    [self performSegueWithIdentifier:@"HomeToBuddyMap" sender:self];
                 });
+                
+                [_httpClient setBuddyWithID:[[NSUserDefaults standardUserDefaults] objectForKey:BOC_BUDDY_ID_KEY] onCall:YES completion:^(NSError *error)
+                 {
+                     if (!error)
+                     {
+                         //no retain cycle here b/c this block isn't being stored so it will get destroyed after execution and drop its reference to self
+                         [self performSegueWithIdentifier:@"HomeToBuddyMap" sender:self];
+                     }
+                     else
+                     {
+                         dispatch_async(dispatch_get_main_queue(), ^{
+                             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed put you on call! Try again to start session." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                             [alert show];
+                             [_locationManager stopUpdatingLocation];
+                             sessionRequestInProgress = NO;
+                             buddySessionRequestInProgress = NO;
+                             [self setButtonsEnabled:YES];
+                         });
+                     }
+                 }];
+                
             }
             
             if (sessionRequestInProgress)
@@ -400,6 +425,8 @@
         BOCBuddyMapViewController *vc = (BOCBuddyMapViewController *)[segue destinationViewController];
         
         [vc setInitialUserLocation:recentLocation];
+        
+        //[[BOCBuddyRefreshService sharedService] start];
     }
 }
 

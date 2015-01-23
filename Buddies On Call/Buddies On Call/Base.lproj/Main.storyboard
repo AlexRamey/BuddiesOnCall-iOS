@@ -17,18 +17,70 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" showsUserLocation="YES" showsBuildings="NO" showsPointsOfInterest="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oZc-1d-F5e"/>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ysU-Kv-5XF" customClass="BOCButton">
-                                <rect key="frame" x="378" y="550" width="116" height="30"/>
-                                <state key="normal" title="Action Button">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LSP-an-f8L" customClass="BOCButton">
+                                <rect key="frame" x="16" y="548" width="282" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="ohX-oh-0gZ"/>
+                                </constraints>
+                                <state key="normal" title="Mission Failed">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="ohX-oh-0gZ"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="missionFailedButtonPressed:" destination="ABT-Lg-Rhr" eventType="touchUpInside" id="Vpd-Cq-0Pu"/>
+                                </connections>
+                            </button>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="FIr-y2-B72">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="540"/>
+                            </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ysU-Kv-5XF" customClass="BOCButton">
+                                <rect key="frame" x="303" y="545" width="281" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="KIk-E5-2y3"/>
+                                </constraints>
+                                <state key="normal" title="Mark Session &quot;Working&quot;">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="KIk-E5-2y3"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="actionButtonPressed:" destination="ABT-Lg-Rhr" eventType="touchUpInside" id="Xbb-XX-jOr"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="ysU-Kv-5XF" secondAttribute="centerX" id="66t-dx-dvP"/>
+                            <constraint firstItem="LSP-an-f8L" firstAttribute="width" secondItem="ysU-Kv-5XF" secondAttribute="width" id="I47-zZ-GGi"/>
+                            <constraint firstItem="ysU-Kv-5XF" firstAttribute="leading" secondItem="LSP-an-f8L" secondAttribute="trailing" constant="5" id="L3a-Dp-aAb"/>
+                            <constraint firstItem="LSP-an-f8L" firstAttribute="top" secondItem="FIr-y2-B72" secondAttribute="bottom" constant="8" id="M3t-iO-Kzk"/>
+                            <constraint firstItem="LSP-an-f8L" firstAttribute="leading" secondItem="XNo-33-Qe0" secondAttribute="leadingMargin" id="Mp7-HJ-GjO"/>
+                            <constraint firstItem="26M-vL-4U7" firstAttribute="top" secondItem="ysU-Kv-5XF" secondAttribute="bottom" constant="5" id="OCh-6x-K3f"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="ysU-Kv-5XF" secondAttribute="trailing" id="SSc-TZ-y36"/>
+                            <constraint firstItem="FIr-y2-B72" firstAttribute="leading" secondItem="XNo-33-Qe0" secondAttribute="leadingMargin" constant="-16" id="VIQ-S0-sDh"/>
+                            <constraint firstItem="ysU-Kv-5XF" firstAttribute="top" secondItem="FIr-y2-B72" secondAttribute="bottom" constant="5" id="XW5-xd-rBp"/>
+                            <constraint firstItem="FIr-y2-B72" firstAttribute="top" secondItem="NRv-1n-N8b" secondAttribute="bottom" constant="-20" id="dm5-Ct-1zc"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="FIr-y2-B72" secondAttribute="trailing" constant="-16" id="lob-ai-2Vi"/>
+                            <constraint firstItem="26M-vL-4U7" firstAttribute="top" secondItem="FIr-y2-B72" secondAttribute="bottom" constant="60" id="mt0-ac-n1C"/>
+                            <constraint firstItem="26M-vL-4U7" firstAttribute="top" secondItem="LSP-an-f8L" secondAttribute="bottom" constant="2" id="wsx-td-p7s"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="66t-dx-dvP"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
-                        <outlet property="mapView" destination="oZc-1d-F5e" id="4Zw-qT-eC7"/>
+                        <outlet property="actionButton" destination="ysU-Kv-5XF" id="YfI-2M-U4w"/>
+                        <outlet property="mapView" destination="FIr-y2-B72" id="MUI-Xj-r9G"/>
+                        <outlet property="missionFailed" destination="LSP-an-f8L" id="5eA-Dd-h6O"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7N0-yC-LQw" userLabel="First Responder" sceneMemberID="firstResponder"/>

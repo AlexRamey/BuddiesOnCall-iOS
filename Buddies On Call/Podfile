@@ -3,8 +3,6 @@
 
 target 'Buddies On Call' do
 
-pod "AFNetworking", "~> 2.5.0"
-
 end
 
 target 'Buddies On CallTests' do
