@@ -509,4 +509,43 @@
     [task resume];
 }
 
+-(void)fetchUnresolvedSessionsForBuddy:(NSNumber *)buddyID completion:(void (^)(NSError *, NSDictionary *))completion
+{
+    NSString *url = [[NSString stringWithFormat:@"http://boffo-server.bitnamiapp.com:5000/buddies/%d/sessions", [buddyID intValue]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    request.HTTPMethod = @"GET";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    NSURLSessionDataTask *task = [_session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error)
+        {
+            NSLog(@"Error: %@", error);
+            completion(error, nil);
+        }
+        else
+        {
+            NSError *parseError = nil;
+            
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&parseError];
+            NSLog(@"Fetch Buddy Sessions JSON: %@", json);
+            
+            if (parseError)
+            {
+                completion(parseError, nil);
+            }
+            else if ([[json objectForKey:@"status"] intValue] == 500)
+            {
+                NSError *error = [[NSError alloc] init];
+                completion(error, nil);
+            }
+            else
+            {
+                completion(nil, json);
+            }
+        }
+    }];
+    
+    [task resume];
+}
+
 @end

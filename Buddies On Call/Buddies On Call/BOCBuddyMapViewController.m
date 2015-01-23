@@ -8,6 +8,8 @@
 
 #import "BOCBuddyMapViewController.h"
 #import "BOCBuddyRefreshService.h"
+#import "BOCHTTPClient.h"
+#import "AppDelegate.h"
 
 @interface BOCBuddyMapViewController ()
 
@@ -53,11 +55,33 @@
     //Mark Session Failed
     
     //Take Buddy Off Call
+    [[BOCHTTPClient sharedClient] setBuddyWithID:[[NSUserDefaults standardUserDefaults] objectForKey:BOC_BUDDY_ID_KEY] onCall:NO completion:^(NSError *error) {
+        if (!error)
+        {
+            //END Service --> which should pop this view controller . . .
+            NSLog(@"Taken Off Call");
+        }
+        else
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to take you off call! Try again." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                [alert show];
+            });
+        }
+    }];
 }
 
 -(void)dealloc
 {
     [[BOCBuddyRefreshService sharedService] setMapController:nil];
+}
+
+-(void)notifyBuddyOnCall
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Alert!" message:@"You have an assignment." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        [alert show];
+    });
 }
 
 /*

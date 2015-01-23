@@ -69,7 +69,7 @@
     [_httpClient fetchUnresolvedSessionsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:BOC_USER_ID_KEY] completion:^(NSError *error, NSDictionary *sessions) {
         if (!error)
         {
-            //check to see if any of the sessions have status "resolved"
+            //check to see if any unresolved sessions exist
             if([[sessions objectForKey:@"sessions"] count] == 0) //they have all been resolved!
             {
                     dispatch_async(dispatch_get_main_queue(), ^{

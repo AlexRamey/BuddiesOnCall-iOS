@@ -9,7 +9,7 @@
 #import "BOCBuddyRefreshService.h"
 #import "AppDelegate.h"
 #import "BOCHTTPClient.h"
-#import "BOCMapViewController.h"
+#import "BOCBuddyMapViewController.h"
 #import "BOCHomeControllerViewController.h"
 
 @implementation BOCBuddyRefreshService
@@ -55,10 +55,43 @@
 -(void)stop
 {
     [_timer invalidate];
+    isOnCall = YES;
 }
 
 -(IBAction)updateBuddiesAndSessionsInformationForBuddy:(id)sender
 {
+    if (inProgress)
+    {
+        return;
+    }
+    
+    inProgress = YES;
+    
+    [_httpClient fetchUnresolvedSessionsForBuddy:[[NSUserDefaults standardUserDefaults] objectForKey:BOC_BUDDY_ID_KEY] completion:^(NSError *error, NSDictionary *sessions)
+    {
+        if (!error)
+        {
+            NSArray *sessionList = [sessions objectForKey:@"sessions"];
+            
+            if (isOnCall && [sessionList count] > 0)
+            {
+                isOnCall = NO;
+                
+                if (_mapController)
+                {
+                    [_mapController notifyBuddyOnCall];
+                }
+            }
+            
+            
+            
+        }
+        else
+        {
+            NSLog(@"Error: %@", error);
+            inProgress = NO;
+        }
+    }];
     
 }
 

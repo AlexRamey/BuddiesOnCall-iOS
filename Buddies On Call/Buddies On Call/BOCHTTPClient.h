@@ -41,4 +41,6 @@
 
 -(void)setBuddyWithID:(NSNumber *)buddyID onCall:(BOOL)onCall completion:(void (^)(NSError *))completion;
 
+-(void)fetchUnresolvedSessionsForBuddy:(NSNumber *)buddyID completion:(void (^)(NSError *, NSDictionary *))completion;
+
 @end
