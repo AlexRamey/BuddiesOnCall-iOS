@@ -32,9 +32,9 @@
 
 -(void)fetchInformationForBuddy:(NSString *)buddyID completion:(void (^)(NSError *, NSDictionary *)) completion;
 
--(void)resolveAllSessionsForUser:(NSNumber *)userID completion:(void (^)(void))completion;
+-(void)resolveAllSessionsForUser:(NSNumber *)userID completion:(void (^)(NSError *))completion;
 
--(void)markSessionResolved:(NSNumber *)session completion:(void (^)(void))completion;
+-(void)markSessionResolved:(NSNumber *)session completion:(void (^)(NSError *))completion;
 
 //Buddy Methods
 -(void)verifyBuddyObjectID:(NSNumber *)userID completion:(void (^)(NSError *, NSNumber *))completion;
@@ -42,5 +42,9 @@
 -(void)setBuddyWithID:(NSNumber *)buddyID onCall:(BOOL)onCall completion:(void (^)(NSError *))completion;
 
 -(void)fetchUnresolvedSessionsForBuddy:(NSNumber *)buddyID completion:(void (^)(NSError *, NSDictionary *))completion;
+
+-(void)failAllSessionsForBuddy:(NSNumber *)buddyID completion:(void (^)(NSError *))completion;
+
+-(void)setAllSessionsWorkingForBuddy:(NSNumber *)buddyID completion:(void (^)(NSError *))completion;
 
 @end

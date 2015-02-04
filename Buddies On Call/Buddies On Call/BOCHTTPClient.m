@@ -363,8 +363,10 @@
     [task resume];
 }
 
--(void)resolveAllSessionsForUser:(NSNumber *)userID completion:(void (^)(void))completion
+-(void)resolveAllSessionsForUser:(NSNumber *)userID completion:(void (^)(NSError *))completion
 {
+    __block NSError *sessionResolutionError = nil;
+    
     [self fetchUnresolvedSessionsForUser:userID completion:^(NSError *error, NSDictionary *sessions) {
         if (!error)
         {
@@ -372,27 +374,32 @@
             
             for (NSDictionary *session in [sessions objectForKey:@"sessions"])
             {
-                [self markSessionResolved:[session objectForKey:@"id"] completion:^{
+                [self markSessionResolved:[session objectForKey:@"id"] completion:^(NSError * err){
+                    if (!sessionResolutionError && err)
+                    {
+                        sessionResolutionError = err;
+                    }
+                    
                     if (--counter == 0)
                     {
-                        completion();
+                        completion(sessionResolutionError);
                     }
                 }];
             }
             
             if (counter == 0)
             {
-                completion();
+                completion(nil);
             }
         }
         else
         {
-            completion();
+            completion(error);
         }
     }];
 }
 
--(void)markSessionResolved:(NSNumber *)session completion:(void (^)(void))completion
+-(void)markSessionResolved:(NSNumber *)session completion:(void (^)(NSError *))completion
 {
     NSData *putData = [@"{\"status\":\"resolved\"}" dataUsingEncoding:NSUTF8StringEncoding];
     
@@ -401,7 +408,116 @@
     request.HTTPMethod = @"PUT";
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
-    NSURLSessionDataTask *task = [_session dataTaskWithRequest:request];
+    NSURLSessionDataTask *task = [_session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) //either request went wrong or there isn't a user with this id
+        {
+            NSLog(@"Error: %@", error);
+            completion(error);
+        }
+        else
+        {
+            NSError *parseError = nil;
+            
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&parseError];
+            NSLog(@"PUT Session Resolved JSON: %@", json);
+            
+            if (parseError)
+            {
+                completion(parseError);
+            }
+            else if ([[json objectForKey:@"status"] intValue] == 500)
+            {
+                NSError *error = [[NSError alloc] init];
+                completion(error);
+            }
+            else
+            {
+                completion(nil);
+            }
+        }
+    }];
+    
+    [task resume];
+}
+
+-(void)markSessionFailed:(NSNumber *)session completion:(void (^)(NSError *))completion
+{
+    NSData *putData = [@"{\"status\":\"failed\"}" dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://boffo-server.bitnamiapp.com:5000/sessions/%d", [session intValue]]]];
+    request.HTTPBody = putData;
+    request.HTTPMethod = @"PUT";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    
+    NSURLSessionDataTask *task = [_session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) //either request went wrong or there isn't a user with this id
+        {
+            NSLog(@"Error: %@", error);
+            completion(error);
+        }
+        else
+        {
+            NSError *parseError = nil;
+            
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&parseError];
+            NSLog(@"PUT Session Failed JSON: %@", json);
+            
+            if (parseError)
+            {
+                completion(parseError);
+            }
+            else if ([[json objectForKey:@"status"] intValue] == 500)
+            {
+                NSError *error = [[NSError alloc] init];
+                completion(error);
+            }
+            else
+            {
+                completion(nil);
+            }
+        }
+    }];
+    
+    [task resume];
+}
+
+-(void)markSessionWorking:(NSNumber *)session completion:(void (^)(NSError *))completion
+{
+    NSData *putData = [@"{\"status\":\"working\"}" dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://boffo-server.bitnamiapp.com:5000/sessions/%d", [session intValue]]]];
+    request.HTTPBody = putData;
+    request.HTTPMethod = @"PUT";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    
+    NSURLSessionDataTask *task = [_session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) //either request went wrong or there isn't a user with this id
+        {
+            NSLog(@"Error: %@", error);
+            completion(error);
+        }
+        else
+        {
+            NSError *parseError = nil;
+            
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&parseError];
+            NSLog(@"PUT Session Working JSON: %@", json);
+            
+            if (parseError)
+            {
+                completion(parseError);
+            }
+            else if ([[json objectForKey:@"status"] intValue] == 500)
+            {
+                NSError *error = [[NSError alloc] init];
+                completion(error);
+            }
+            else
+            {
+                completion(nil);
+            }
+        }
+    }];
     
     [task resume];
 }
@@ -546,6 +662,83 @@
     }];
     
     [task resume];
+}
+
+-(void)failAllSessionsForBuddy:(NSNumber *)buddyID completion:(void (^)(NSError *))completion
+{
+    __block NSError *sessionFailError = nil;
+    
+    [self fetchUnresolvedSessionsForBuddy:buddyID completion:^(NSError *error, NSDictionary *sessions) {
+        if (error)
+        {
+            completion(error);
+        }
+        else
+        {
+            NSArray *sessionList = [sessions objectForKey:@"sessions"];
+            
+            __block int counter = (int)[sessionList count];
+            
+            for (NSDictionary *session in sessionList)
+            {
+                [self markSessionFailed:[session objectForKey:@"id"] completion:^(NSError * err){
+                    if (!sessionFailError && err)
+                    {
+                        sessionFailError = err;
+                    }
+                    
+                    if (--counter == 0)
+                    {
+                        completion(sessionFailError);
+                    }
+                }];
+            }
+            
+            
+            if (counter == 0)
+            {
+                completion(nil);
+            }
+        }
+    }];
+}
+
+-(void)setAllSessionsWorkingForBuddy:(NSNumber *)buddyID completion:(void (^)(NSError *))completion
+{
+    __block NSError *sessionWorkingError = nil;
+    
+    [self fetchUnresolvedSessionsForBuddy:buddyID completion:^(NSError *error, NSDictionary *sessions) {
+        if (error)
+        {
+            completion(error);
+        }
+        else
+        {
+            NSArray *sessionList = [sessions objectForKey:@"sessions"];
+            
+            __block int counter = (int)[sessionList count];
+            
+            for (NSDictionary *session in sessionList)
+            {
+                [self markSessionWorking:[session objectForKey:@"id"] completion:^(NSError * err){
+                    if (!sessionWorkingError && err)
+                    {
+                        sessionWorkingError = err;
+                    }
+                    
+                    if (--counter == 0)
+                    {
+                        completion(sessionWorkingError);
+                    }
+                }];
+            }
+            
+            if (counter == 0)
+            {
+                completion(nil);
+            }
+        }
+    }];
 }
 
 @end

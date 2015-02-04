@@ -67,10 +67,21 @@
         _buddyLogin.enabled = NO;
         
         //Don't let the app delete a session that gets started right after button press
-        [[BOCHTTPClient sharedClient] resolveAllSessionsForUser:userID completion:^{
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self setButtonsEnabled:YES];
-            });
+        [[BOCHTTPClient sharedClient] resolveAllSessionsForUser:userID completion:^(NSError *error){
+            
+            if (!error)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self setButtonsEnabled:YES];
+                });
+            }
+            else
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error." message:@"Failed to close out lingering sessions. Force quit app and try again." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                    [alert show];
+                });
+            }
         }];
     }
 }
@@ -426,7 +437,7 @@
         
         [vc setInitialUserLocation:recentLocation];
         
-        //[[BOCBuddyRefreshService sharedService] start];
+        [[BOCBuddyRefreshService sharedService] start];
     }
 }
 

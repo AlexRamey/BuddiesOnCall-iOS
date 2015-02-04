@@ -37,8 +37,6 @@
         _httpClient = [BOCHTTPClient sharedClient];
         
         inProgress = NO;
-        
-        isOnCall = YES;
     }
     
     return self;
@@ -46,6 +44,8 @@
 
 -(void)start
 {
+    isOnCall = YES;
+    
     _timer = [NSTimer timerWithTimeInterval:10.0 target:self selector:@selector(updateBuddiesAndSessionsInformationForBuddy:) userInfo:nil repeats:YES];
     
     [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSDefaultRunLoopMode];
@@ -55,7 +55,6 @@
 -(void)stop
 {
     [_timer invalidate];
-    isOnCall = YES;
 }
 
 -(IBAction)updateBuddiesAndSessionsInformationForBuddy:(id)sender
@@ -73,8 +72,9 @@
         {
             NSArray *sessionList = [sessions objectForKey:@"sessions"];
             
-            if (isOnCall && [sessionList count] > 0)
+            if ([sessionList count] > 0 && isOnCall)
             {
+                //You have an assignment!
                 isOnCall = NO;
                 
                 if (_mapController)
@@ -83,14 +83,40 @@
                 }
             }
             
+            if ([sessionList count] == 0 && !isOnCall)
+            {
+                //Sessions got resolved for you somehow . . .
+                [self stop];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (_mapController)
+                    {
+                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Alert" message:@"All your sessions are complete!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                        [alert show];
+                        [self.mapController dismissViewControllerAnimated:YES completion:nil];
+                    }
+                });
+                
+                inProgress = NO;
+                return;
+            }
             
+            if ([sessionList count] > 0 && !isOnCall)
+            {
+                for (NSDictionary *session in sessionList)
+                {
+                    //loop through sessions, update map and buttons
+                }
+            }
             
+            inProgress = NO;
         }
         else
         {
             NSLog(@"Error: %@", error);
             inProgress = NO;
         }
+        
     }];
     
 }
