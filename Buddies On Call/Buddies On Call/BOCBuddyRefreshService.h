@@ -14,6 +14,7 @@
 {
     __block BOOL inProgress;
     __block BOOL isOnCall;
+    __block BOOL isWorking;
 }
 
 @property (nonatomic, strong) NSTimer *timer;

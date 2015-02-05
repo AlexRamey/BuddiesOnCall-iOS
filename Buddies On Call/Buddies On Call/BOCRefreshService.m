@@ -47,7 +47,6 @@
     _timer = [NSTimer timerWithTimeInterval:10.0 target:self selector:@selector(updateBuddiesAndSessionsInformationForUser:) userInfo:nil repeats:YES];
     
     [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSDefaultRunLoopMode];
-    
 }
 
 -(void)stop

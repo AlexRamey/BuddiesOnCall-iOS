@@ -45,6 +45,7 @@
 -(void)start
 {
     isOnCall = YES;
+    isWorking = NO;
     
     _timer = [NSTimer timerWithTimeInterval:10.0 target:self selector:@selector(updateBuddiesAndSessionsInformationForBuddy:) userInfo:nil repeats:YES];
     
@@ -103,13 +104,97 @@
             
             if ([sessionList count] > 0 && !isOnCall)
             {
+                NSMutableDictionary *fellowBuddies = [[NSMutableDictionary alloc] init];
+                NSString *userID = nil;
+                
+                //check to see if any of the sessions have status "enroute"
                 for (NSDictionary *session in sessionList)
                 {
-                    //loop through sessions, update map and buttons
+                    if ([[session objectForKey:@"buddyid"] intValue] != [[[NSUserDefaults standardUserDefaults] objectForKey:BOC_BUDDY_ID_KEY] intValue])
+                    {
+                        [fellowBuddies setObject:session forKey:[[session objectForKey:@"buddyid"] stringValue]];
+                    }
+                    
+                    if (!userID)
+                    {
+                        userID = [session objectForKey:@"userid"];
+                    }
+                    
+                    if (!isWorking && [[session objectForKey:@"status"] caseInsensitiveCompare:@"working"] == NSOrderedSame)
+                    {
+                        isWorking = YES;
+                        
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            if (self.mapController)
+                            {
+                                [self.mapController.actionButton setTitle:@"Update Status to Resolved" forState:UIControlStateNormal];
+                            }
+                        });
+                    }
+                }
+                
+                //Send user info to the map
+                //1. Get user Info
+                //2. Send it to the map controller
+                
+                NSArray *buddyIDs = [fellowBuddies allKeys];
+                
+                if ([buddyIDs count] == 0)
+                {
+                    inProgress = NO;
+                    return;
+                }
+                
+                __block int completionCounter = 0;
+                
+                __block int locationDownloadCounter = (int)[buddyIDs count];
+                
+                __block int buddyInfoDownloadCounter = (int)[buddyIDs count];
+                
+                __block NSMutableDictionary *buddyLocations = [[NSMutableDictionary alloc] init];
+                
+                __block NSMutableDictionary *buddyInformation = [[NSMutableDictionary alloc] init];
+                
+                for (NSString *buddyID in buddyIDs)
+                {
+                    [_httpClient fetchLastLocationForBuddy:buddyID completion:^(NSError *error, NSDictionary *location) {
+                        if (!error)
+                        {
+                            [buddyLocations setObject:location forKey:buddyID];
+                        }
+                        if (--locationDownloadCounter == 0 && ++completionCounter == 2)
+                        {
+                            inProgress = NO;
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                if (self.mapController)
+                                {
+                                    //[self.mapController drawBuddies:buddyInformation withLocationData:buddyLocations];
+                                }
+                            });
+                        }
+                    }];
+                }
+                
+                for (NSString *buddyID in buddyIDs)
+                {
+                    [_httpClient fetchInformationForBuddy:buddyID completion:^(NSError *error, NSDictionary *buddy) {
+                        if (!error)
+                        {
+                            [buddyInformation setObject:buddy forKey:buddyID];
+                        }
+                        if (--buddyInfoDownloadCounter == 0 && ++completionCounter == 2)
+                        {
+                            inProgress = NO;
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                if (self.mapController)
+                                {
+                                    //[self.mapController drawBuddies:buddyInformation withLocationData:buddyLocations];
+                                }
+                            });
+                        }
+                    }];
                 }
             }
-            
-            inProgress = NO;
         }
         else
         {
