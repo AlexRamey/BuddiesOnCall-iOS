@@ -19,7 +19,7 @@
 
 @implementation BOCMapViewController
 
-static NSString * const reuseIdentifier = @"BUDDY_ANNOTATION_REUSE_IDENTIFIER";
+static NSString * const buddyReuseIdentifier = @"BUDDY_ANNOTATION_REUSE_IDENTIFIER";
 
 -(id)initWithCoder:(NSCoder *)aDecoder
 {
@@ -71,13 +71,17 @@ static NSString * const reuseIdentifier = @"BUDDY_ANNOTATION_REUSE_IDENTIFIER";
     
     for (NSString *buddyID in keySet)
     {
-        CLLocationCoordinate2D coord = CLLocationCoordinate2DMake([locations[buddyID][@"locations"][@"lat"] doubleValue], [locations[buddyID][@"locations"][@"lng"] doubleValue]);
-        NSString *subtitle = [@"Phone: " stringByAppendingString:buddies[buddyID][@"phone"]];
-        NSString *title = buddies[buddyID][@"name"];
-        BOCBuddy *buddy = [[BOCBuddy alloc] initWithCoordinate:coord title:title subtitle:subtitle];
-        [buddyAnnotations addObject:buddy];
+        if (locations[buddyID])
+        {
+            CLLocationCoordinate2D coord = CLLocationCoordinate2DMake([locations[buddyID][@"locations"][@"lat"] doubleValue], [locations[buddyID][@"locations"][@"lng"] doubleValue]);
+            NSString *subtitle = [@"Phone: " stringByAppendingString:buddies[buddyID][@"phone"]];
+            NSString *title = buddies[buddyID][@"name"];
+            BOCBuddy *buddy = [[BOCBuddy alloc] initWithCoordinate:coord title:title subtitle:subtitle];
+            [buddyAnnotations addObject:buddy];
+        }
     }
     
+    //Remove old annotations
     for (BOCBuddy *annotation in _mapView.annotations)
     {
         [_mapView removeAnnotation:annotation];
@@ -101,23 +105,22 @@ static NSString * const reuseIdentifier = @"BUDDY_ANNOTATION_REUSE_IDENTIFIER";
     if ([annotation isKindOfClass:[BOCBuddy class]])
     {
         //Try to dequeue an existing pin first
-        BOCBuddyAnnotationView *pinView = (BOCBuddyAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:reuseIdentifier];
+        BOCBuddyAnnotationView *pinView = (BOCBuddyAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:buddyReuseIdentifier];
         
         if (!pinView)
         {
-            pinView = [[BOCBuddyAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
+            pinView = [[BOCBuddyAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:buddyReuseIdentifier];
         }
         else
         {
-            pinView = [pinView initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
+            pinView = [pinView initWithAnnotation:annotation reuseIdentifier:buddyReuseIdentifier];
         }
+        
         return pinView;
     }
     
     return nil;
 }
-
-
 
 /*
 #pragma mark - Navigation

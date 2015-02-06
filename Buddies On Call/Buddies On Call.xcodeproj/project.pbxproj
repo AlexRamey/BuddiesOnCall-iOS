@@ -25,6 +25,8 @@
 		D0BC22061A62F68300C2D765 /* UIColor+Theme.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BC22051A62F68300C2D765 /* UIColor+Theme.m */; };
 		D0BC220D1A62F95D00C2D765 /* BOCHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = D0BC220C1A62F95D00C2D765 /* BOCHTTPClient.m */; };
 		D0BC22101A62FA1400C2D765 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0BC220F1A62FA1400C2D765 /* CoreLocation.framework */; };
+		D0FEDF631A8470570040E6DE /* BOCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = D0FEDF621A8470570040E6DE /* BOCUser.m */; };
+		D0FEDF661A84729A0040E6DE /* BOCUserAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = D0FEDF651A84729A0040E6DE /* BOCUserAnnotationView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +74,10 @@
 		D0BC220B1A62F95D00C2D765 /* BOCHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BOCHTTPClient.h; sourceTree = "<group>"; };
 		D0BC220C1A62F95D00C2D765 /* BOCHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BOCHTTPClient.m; sourceTree = "<group>"; };
 		D0BC220F1A62FA1400C2D765 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		D0FEDF611A8470570040E6DE /* BOCUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BOCUser.h; sourceTree = "<group>"; };
+		D0FEDF621A8470570040E6DE /* BOCUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BOCUser.m; sourceTree = "<group>"; };
+		D0FEDF641A84729A0040E6DE /* BOCUserAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BOCUserAnnotationView.h; sourceTree = "<group>"; };
+		D0FEDF651A84729A0040E6DE /* BOCUserAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BOCUserAnnotationView.m; sourceTree = "<group>"; };
 		E6558814CF5070289CAB28E3 /* Pods-Buddies On Call.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Buddies On Call.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Buddies On Call/Pods-Buddies On Call.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -124,6 +130,10 @@
 				D08660331A6B2227008A7FDF /* BOCBuddyAnnotationView.m */,
 				D08660351A6B22C2008A7FDF /* BOCBuddy.h */,
 				D08660361A6B22C2008A7FDF /* BOCBuddy.m */,
+				D0FEDF641A84729A0040E6DE /* BOCUserAnnotationView.h */,
+				D0FEDF651A84729A0040E6DE /* BOCUserAnnotationView.m */,
+				D0FEDF611A8470570040E6DE /* BOCUser.h */,
+				D0FEDF621A8470570040E6DE /* BOCUser.m */,
 			);
 			name = Map;
 			sourceTree = "<group>";
@@ -349,12 +359,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0FEDF631A8470570040E6DE /* BOCUser.m in Sources */,
 				D086602E1A6AFB78008A7FDF /* BOCMapViewController.m in Sources */,
 				D086603A1A6B2F29008A7FDF /* BOCRefreshService.m in Sources */,
 				D08660371A6B22C2008A7FDF /* BOCBuddy.m in Sources */,
 				D0BC22021A62F60300C2D765 /* BOCHomeControllerViewController.m in Sources */,
 				D0BC220D1A62F95D00C2D765 /* BOCHTTPClient.m in Sources */,
 				D0BC22061A62F68300C2D765 /* UIColor+Theme.m in Sources */,
+				D0FEDF661A84729A0040E6DE /* BOCUserAnnotationView.m in Sources */,
 				D08660411A703803008A7FDF /* BOCBuddyMapViewController.m in Sources */,
 				D0BC21DE1A62F52800C2D765 /* AppDelegate.m in Sources */,
 				D08660341A6B2227008A7FDF /* BOCBuddyAnnotationView.m in Sources */,

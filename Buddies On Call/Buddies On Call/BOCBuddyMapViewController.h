@@ -16,6 +16,10 @@
 @property (nonatomic, weak) IBOutlet UIButton *missionFailed;
 @property (nonatomic, strong) CLLocation *initialUserLocation;
 
+-(void)drawBuddies:(NSDictionary *)buddies withLocationData:(NSDictionary *)locations;
+
+-(void)drawUser:(NSDictionary *)userInfo withLocationData:(NSDictionary *)location;
+
 -(void)notifyBuddyOnCall;
 
 @end

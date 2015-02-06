@@ -104,6 +104,8 @@
             
             if ([sessionList count] > 0 && !isOnCall)
             {
+                __block int taskCounter = 0;
+                
                 NSMutableDictionary *fellowBuddies = [[NSMutableDictionary alloc] init];
                 NSString *userID = nil;
                 
@@ -133,15 +135,74 @@
                     }
                 }
                 
-                //Send user info to the map
-                //1. Get user Info
-                //2. Send it to the map controller
+                if (userID)
+                {
+                    taskCounter++;
+                    
+                    __block int userPacketCounter = 0;
+                    __block NSError *err = nil;
+                    __block NSDictionary *userInfo = nil;
+                    __block NSDictionary *userLocation = nil;
+                    
+                    [_httpClient getUserInfo:[NSNumber numberWithInt:[userID intValue]] completion:^(NSDictionary *info, NSError *error) {
+                        if (error)
+                        {
+                            err = error;
+                        }
+                        
+                        userInfo = info;
+                        
+                        if (++userPacketCounter == 2)
+                        {
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                if (self.mapController)
+                                {
+                                    [self.mapController drawUser:userInfo withLocationData:userLocation];
+                                }
+                            });
+                            
+                            if (--taskCounter == 0)
+                            {
+                                inProgress = NO;
+                            }
+                        }
+                    }];
+                    
+                    [_httpClient getLastLocationForUser:[NSNumber numberWithInt:[userID intValue]] completion:^(NSDictionary *info, NSError *error) {
+                        if (error)
+                        {
+                            err = error;
+                        }
+                        
+                        userLocation = info;
+                        
+                        if (++userPacketCounter == 2)
+                        {
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                if (self.mapController)
+                                {
+                                    [self.mapController drawUser:userInfo withLocationData:userLocation];
+                                }
+                            });
+                            
+                            if (--taskCounter == 0)
+                            {
+                                inProgress = NO;
+                            }
+                        }
+                    }];
+                }
                 
                 NSArray *buddyIDs = [fellowBuddies allKeys];
                 
+                taskCounter++;
+                
                 if ([buddyIDs count] == 0)
                 {
-                    inProgress = NO;
+                    if (--taskCounter == 0)
+                    {
+                        inProgress = NO;
+                    }
                     return;
                 }
                 
@@ -164,13 +225,16 @@
                         }
                         if (--locationDownloadCounter == 0 && ++completionCounter == 2)
                         {
-                            inProgress = NO;
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 if (self.mapController)
                                 {
-                                    //[self.mapController drawBuddies:buddyInformation withLocationData:buddyLocations];
+                                    [self.mapController drawBuddies:buddyInformation withLocationData:buddyLocations];
                                 }
                             });
+                            if (--taskCounter == 0)
+                            {
+                                inProgress = NO;
+                            }
                         }
                     }];
                 }
@@ -184,13 +248,16 @@
                         }
                         if (--buddyInfoDownloadCounter == 0 && ++completionCounter == 2)
                         {
-                            inProgress = NO;
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 if (self.mapController)
                                 {
-                                    //[self.mapController drawBuddies:buddyInformation withLocationData:buddyLocations];
+                                    [self.mapController drawBuddies:buddyInformation withLocationData:buddyLocations];
                                 }
                             });
+                            if (--taskCounter == 0)
+                            {
+                                inProgress = NO;
+                            }
                         }
                     }];
                 }

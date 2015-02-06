@@ -11,12 +11,19 @@
 #import "BOCHomeControllerViewController.h"
 #import "BOCHTTPClient.h"
 #import "AppDelegate.h"
+#import "BOCBuddy.h"
+#import "BOCBuddyAnnotationView.h"
+#import "BOCUserAnnotationView.h"
+#import "BOCUser.h"
 
 @interface BOCBuddyMapViewController ()
 
 @end
 
 @implementation BOCBuddyMapViewController
+
+static NSString * const buddyReuseIdentifier = @"BUDDY_ANNOTATION_REUSE_IDENTIFIER";
+static NSString * const userReuseIdentifier = @"USER_ANNOTATION_REUSE_IDENTIFIER";
 
 -(id)initWithCoder:(NSCoder *)aDecoder
 {
@@ -140,6 +147,107 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Alert!" message:@"You have an assignment." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
         [alert show];
     });
+}
+
+-(void)drawBuddies:(NSDictionary *)buddies withLocationData:(NSDictionary *)locations
+{
+    NSLog(@"Draw Buddies");
+    
+    NSLog(@"Buddies: %@", buddies);
+    
+    NSLog(@"Location Data: %@", locations);
+    
+    NSArray *keySet = [buddies allKeys];
+    NSMutableArray *buddyAnnotations = [[NSMutableArray alloc] init];
+    
+    for (NSString *buddyID in keySet)
+    {
+        if (locations[buddyID])
+        {
+            CLLocationCoordinate2D coord = CLLocationCoordinate2DMake([locations[buddyID][@"locations"][@"lat"] doubleValue], [locations[buddyID][@"locations"][@"lng"] doubleValue]);
+            NSString *subtitle = [@"Phone: " stringByAppendingString:buddies[buddyID][@"phone"]];
+            NSString *title = buddies[buddyID][@"name"];
+            BOCBuddy *buddy = [[BOCBuddy alloc] initWithCoordinate:coord title:title subtitle:subtitle];
+            [buddyAnnotations addObject:buddy];
+        }
+    }
+    
+    //Remove old annotations
+    for (BOCBuddy *annotation in _mapView.annotations)
+    {
+        [_mapView removeAnnotation:annotation];
+    }
+    
+    [_mapView addAnnotations:buddyAnnotations];
+    NSLog(@"Annotations Added!");
+}
+
+-(void)drawUser:(NSDictionary *)userInfo withLocationData:(NSDictionary *)location
+{
+    if (!userInfo || !location)
+    {
+        return;
+    }
+    
+    CLLocationCoordinate2D coord = CLLocationCoordinate2DMake([location[@"locations"][@"lat"] doubleValue], [location[@"locations"][@"lng"] doubleValue]);
+    NSString *subtitle = [@"Phone: " stringByAppendingString:userInfo[@"phone"]];
+    NSString *title = userInfo[@"name"];
+    BOCUser *user = [[BOCUser alloc] initWithCoordinate:coord title:title subtitle:subtitle];
+    
+    for (BOCUser *annotation in _mapView.annotations)
+    {
+        [_mapView removeAnnotation:annotation];
+    }
+    
+    [_mapView addAnnotation:user];
+}
+
+#pragma mark - MKMapViewDelegate Methods
+
+-(MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
+{
+    
+    // If it's the user location, just return nil.
+    if ([annotation isKindOfClass:[MKUserLocation class]])
+    {
+        return nil;
+    }
+    
+    if ([annotation isKindOfClass:[BOCBuddy class]])
+    {
+        //Try to dequeue an existing pin first
+        BOCBuddyAnnotationView *pinView = (BOCBuddyAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:buddyReuseIdentifier];
+        
+        if (!pinView)
+        {
+            pinView = [[BOCBuddyAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:buddyReuseIdentifier];
+        }
+        else
+        {
+            pinView = [pinView initWithAnnotation:annotation reuseIdentifier:buddyReuseIdentifier];
+        }
+        return pinView;
+    }
+    
+    if ([annotation isKindOfClass:[BOCUser class]])
+    {
+        //Try to dequeue an existing pin first
+        BOCUserAnnotationView *pinView = (BOCUserAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:userReuseIdentifier];
+        
+        if (!pinView)
+        {
+            pinView = [[BOCUserAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:userReuseIdentifier];
+        }
+        else
+        {
+            pinView = [pinView initWithAnnotation:annotation reuseIdentifier:userReuseIdentifier];
+        }
+        
+        return pinView;
+    }
+    
+    
+    return nil;
 }
 
 /*

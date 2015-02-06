@@ -741,4 +741,82 @@
     }];
 }
 
+-(void)getUserInfo:(NSNumber *)userID completion:(void (^)(NSDictionary *, NSError *))completion
+{
+    NSString *url = [[NSString stringWithFormat:@"http://boffo-server.bitnamiapp.com:5000/users/%@/lastlocation", userID] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    request.HTTPMethod = @"GET";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    NSURLSessionDataTask *task = [_session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) //either request went wrong or there isn't a user with this id
+        {
+            NSLog(@"Error: %@", error);
+            completion(nil, error);
+        }
+        else
+        {
+            NSError *parseError = nil;
+            
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&parseError];
+            NSLog(@"Fetch Last User Location JSON: %@", json);
+            
+            if (parseError)
+            {
+                completion(nil, parseError);
+            }
+            else if ([[json objectForKey:@"status"] intValue] == 500)
+            {
+                NSError *error = [[NSError alloc] init];
+                completion(nil, error);
+            }
+            else
+            {
+                completion(json, nil);
+            }
+        }
+    }];
+    
+    [task resume];
+}
+
+-(void)getLastLocationForUser:(NSNumber *)userID completion:(void (^)(NSDictionary *, NSError *))completion
+{
+    NSString *url = [[NSString stringWithFormat:@"http://boffo-server.bitnamiapp.com:5000/users/%@", userID] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    request.HTTPMethod = @"GET";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    NSURLSessionDataTask *task = [_session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) //either request went wrong or there isn't a user with this id
+        {
+            NSLog(@"Error: %@", error);
+            completion(nil, error);
+        }
+        else
+        {
+            NSError *parseError = nil;
+            
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&parseError];
+            NSLog(@"Fetch Last User Location JSON: %@", json);
+            
+            if (parseError)
+            {
+                completion(nil, parseError);
+            }
+            else if ([[json objectForKey:@"status"] intValue] == 500)
+            {
+                NSError *error = [[NSError alloc] init];
+                completion(nil, error);
+            }
+            else
+            {
+                completion(json, nil);
+            }
+        }
+    }];
+    
+    [task resume];
+}
+
 @end

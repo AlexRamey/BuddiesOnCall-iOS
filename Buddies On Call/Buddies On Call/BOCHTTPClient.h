@@ -47,4 +47,8 @@
 
 -(void)setAllSessionsWorkingForBuddy:(NSNumber *)buddyID completion:(void (^)(NSError *))completion;
 
+-(void)getUserInfo:(NSNumber *)userID completion:(void (^)(NSDictionary *info, NSError *))completion;
+
+-(void)getLastLocationForUser:(NSNumber *)userID completion:(void (^)(NSDictionary *info, NSError *))completion;
+
 @end
