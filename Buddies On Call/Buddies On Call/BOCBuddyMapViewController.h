@@ -8,12 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
+#import "BOCButton.h"
 
 @interface BOCBuddyMapViewController : UIViewController <MKMapViewDelegate>
 
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
-@property (nonatomic, weak) IBOutlet UIButton *actionButton;
-@property (nonatomic, weak) IBOutlet UIButton *missionFailed;
+@property (nonatomic, weak) IBOutlet BOCButton *actionButton;
+@property (nonatomic, weak) IBOutlet BOCButton *missionFailed;
 @property (nonatomic, strong) CLLocation *initialUserLocation;
 
 -(void)drawBuddies:(NSDictionary *)buddies withLocationData:(NSDictionary *)locations;

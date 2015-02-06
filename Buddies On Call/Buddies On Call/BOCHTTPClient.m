@@ -440,6 +440,83 @@
     [task resume];
 }
 
+-(void)cancelAllSessionsForUser:(NSNumber *)userID completion:(void (^)(NSError *))completion
+{
+    __block NSError *sessionCancelError = nil;
+    
+    [self fetchUnresolvedSessionsForUser:userID completion:^(NSError *error, NSDictionary *sessions) {
+        if (!error)
+        {
+            __block int counter = (int)[[sessions objectForKey:@"sesions"] count];
+            
+            for (NSDictionary *session in [sessions objectForKey:@"sessions"])
+            {
+                [self markSessionCancelled:[session objectForKey:@"id"] completion:^(NSError * err){
+                    if (!sessionCancelError && err)
+                    {
+                        sessionCancelError = err;
+                    }
+                    
+                    if (--counter == 0)
+                    {
+                        completion(sessionCancelError);
+                    }
+                }];
+            }
+            
+            if (counter == 0)
+            {
+                completion(nil);
+            }
+        }
+        else
+        {
+            completion(error);
+        }
+    }];
+}
+
+-(void)markSessionCancelled:(NSNumber *)session completion:(void (^)(NSError *))completion
+{
+    NSData *putData = [@"{\"status\":\"cancelled\"}" dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://boffo-server.bitnamiapp.com:5000/sessions/%d", [session intValue]]]];
+    request.HTTPBody = putData;
+    request.HTTPMethod = @"PUT";
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    
+    NSURLSessionDataTask *task = [_session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) //either request went wrong or there isn't a user with this id
+        {
+            NSLog(@"Error: %@", error);
+            completion(error);
+        }
+        else
+        {
+            NSError *parseError = nil;
+            
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&parseError];
+            NSLog(@"PUT Session Cancelled JSON: %@", json);
+            
+            if (parseError)
+            {
+                completion(parseError);
+            }
+            else if ([[json objectForKey:@"status"] intValue] == 500)
+            {
+                NSError *error = [[NSError alloc] init];
+                completion(error);
+            }
+            else
+            {
+                completion(nil);
+            }
+        }
+    }];
+    
+    [task resume];
+}
+
 -(void)markSessionFailed:(NSNumber *)session completion:(void (^)(NSError *))completion
 {
     NSData *putData = [@"{\"status\":\"failed\"}" dataUsingEncoding:NSUTF8StringEncoding];

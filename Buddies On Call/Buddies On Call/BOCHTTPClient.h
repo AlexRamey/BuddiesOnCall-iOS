@@ -36,6 +36,10 @@
 
 -(void)markSessionResolved:(NSNumber *)session completion:(void (^)(NSError *))completion;
 
+-(void)cancelAllSessionsForUser:(NSNumber *)userID completion:(void (^)(NSError *))completion;
+
+-(void)markSessionCancelled:(NSNumber *)session completion:(void (^)(NSError *))completion;
+
 //Buddy Methods
 -(void)verifyBuddyObjectID:(NSNumber *)userID completion:(void (^)(NSError *, NSNumber *))completion;
 

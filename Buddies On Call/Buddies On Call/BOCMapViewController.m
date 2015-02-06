@@ -12,6 +12,7 @@
 #import "BOCBuddyAnnotationView.h"
 #import "BOCBuddy.h"
 #import "AppDelegate.h"
+#import "BOCHomeControllerViewController.h"
 
 @interface BOCMapViewController ()
 
@@ -56,6 +57,34 @@ static NSString * const buddyReuseIdentifier = @"BUDDY_ANNOTATION_REUSE_IDENTIFI
 -(void)dealloc
 {
     [[BOCRefreshService sharedService] setMapController:nil];
+}
+
+-(IBAction)cancelSession:(id)sender
+{
+    NSNumber *userID = [[NSUserDefaults standardUserDefaults] objectForKey:BOC_USER_ID_KEY];
+    
+    [[BOCHTTPClient sharedClient] cancelAllSessionsForUser:userID completion:^(NSError *error) {
+        if (error)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to cancel session! Try again." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                [alert show];
+            });
+        }
+        else //success
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[BOCRefreshService sharedService] stop];
+                if (self.presentingViewController)
+                {
+                    BOCHomeControllerViewController *vc = (BOCHomeControllerViewController *)self.presentingViewController;
+                    [vc sessionResolved];
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success!" message:@"Your session has been cancelled." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                    [alert show];
+                }
+            });
+        }
+    }];
 }
 
 -(void)drawBuddies:(NSDictionary *)buddies withLocationData:(NSDictionary *)locations

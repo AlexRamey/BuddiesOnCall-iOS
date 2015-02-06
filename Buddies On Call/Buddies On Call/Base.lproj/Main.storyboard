@@ -85,7 +85,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7N0-yC-LQw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="659" y="881"/>
+            <point key="canvasLocation" x="659" y="877"/>
         </scene>
         <!--Home Controller View Controller-->
         <scene sceneID="ufC-wZ-h7g">
@@ -172,21 +172,38 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="hybrid" rotateEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TXL-dp-vik">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="550"/>
                                 <connections>
                                     <outlet property="delegate" destination="uAZ-rP-uhy" id="lMR-e1-RDX"/>
                                 </connections>
                             </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BCi-vo-wf8" customClass="BOCButton">
+                                <rect key="frame" x="200" y="550" width="200" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="1ro-QV-5aq"/>
+                                    <constraint firstAttribute="width" constant="200" id="KBh-sN-6Qq"/>
+                                </constraints>
+                                <state key="normal" title="Cancel Session">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="cancelSession:" destination="uAZ-rP-uhy" eventType="touchUpInside" id="anz-ci-cqJ"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="TXL-dp-vik" firstAttribute="leading" secondItem="pgi-Ao-nFF" secondAttribute="leadingMargin" constant="-16" id="GSo-Lh-w3m"/>
                             <constraint firstItem="TXL-dp-vik" firstAttribute="top" secondItem="sfJ-f6-Cbv" secondAttribute="bottom" constant="-20" id="I6q-Si-mIG"/>
-                            <constraint firstItem="hqt-eQ-3AY" firstAttribute="top" secondItem="TXL-dp-vik" secondAttribute="bottom" id="fSv-Dw-Vr4"/>
+                            <constraint firstItem="hqt-eQ-3AY" firstAttribute="top" secondItem="BCi-vo-wf8" secondAttribute="bottom" id="ZxI-27-7mw"/>
+                            <constraint firstItem="BCi-vo-wf8" firstAttribute="top" secondItem="TXL-dp-vik" secondAttribute="bottom" id="fu3-Fx-5Dz"/>
                             <constraint firstAttribute="trailingMargin" secondItem="TXL-dp-vik" secondAttribute="trailing" constant="-16" id="jZi-Xz-tUt"/>
+                            <constraint firstAttribute="centerX" secondItem="BCi-vo-wf8" secondAttribute="centerX" id="zkB-0S-c4m"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="cancelSession" destination="BCi-vo-wf8" id="khI-wA-Q4Y"/>
                         <outlet property="mapView" destination="TXL-dp-vik" id="3HZ-CX-bM6"/>
                     </connections>
                 </viewController>

@@ -9,10 +9,13 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import "BOCHTTPClient.h"
+#import "BOCButton.h"
 
 @interface BOCMapViewController : UIViewController <MKMapViewDelegate>
 
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
+@property (nonatomic, weak) IBOutlet BOCButton *cancelSession;
+
 @property (nonatomic, strong) CLLocation *initialUserLocation;
 
 -(void)drawBuddies:(NSDictionary *)buddies withLocationData:(NSDictionary *)locations;
