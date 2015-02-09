@@ -10,4 +10,19 @@
 
 @implementation BOCUser
 
+-(id)initWithCoordinate:(CLLocationCoordinate2D)coord title:(NSString *)title subtitle:(NSString *)subtitle
+{
+    self = [super init];
+    
+    if (self)
+    {
+        _coordinate = coord;
+        _title = title;
+        _subtitle = subtitle;
+    }
+    
+    return self;
+}
+
+
 @end

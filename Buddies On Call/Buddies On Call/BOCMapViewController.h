@@ -11,7 +11,7 @@
 #import "BOCHTTPClient.h"
 #import "BOCButton.h"
 
-@interface BOCMapViewController : UIViewController <MKMapViewDelegate>
+@interface BOCMapViewController : UIViewController <MKMapViewDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, weak) IBOutlet MKMapView *mapView;
 @property (nonatomic, weak) IBOutlet BOCButton *cancelSession;
